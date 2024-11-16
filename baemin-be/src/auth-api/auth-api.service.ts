@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaPostgresService } from 'src/prisma/prisma.service';
 import { UserApiService } from 'src/user-api/user-api.service';
-import { RegisterDto } from './dto/request/authen.dto';
+import { RegisterDto, UpdateUserDto } from './dto/request/authen.dto';
 
 @Injectable()
 export class AuthApiService {
@@ -35,6 +35,10 @@ export class AuthApiService {
             last_name: user.last_name,
             role: user.role
         };
+    }
+
+    async updateUserInfo(info: UpdateUserDto) {
+        return this.userApiService.updateUser(info);
     }
 
     async registerUser( info: RegisterDto ) {

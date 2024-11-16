@@ -1,7 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, ValidationPipe } from '@nestjs/common';
 import { AuthApiService } from './auth-api.service';
-import { ApiBody, ApiOperation } from '@nestjs/swagger';
-import { LoginDto, RegisterDto } from './dto/request/authen.dto';
+import { ApiBody, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { LoginDto, RegisterDto, UpdateUserDto } from './dto/request/authen.dto';
 
 @Controller('auth-api')
 export class AuthApiController {
@@ -56,5 +56,38 @@ export class AuthApiController {
     return this.authApiService.registerUser(registerDto);
   }
   
+  @Get('/profile/:user_id')
+  @ApiOperation({
+    summary: 'Get profile by userId',
+  })
+  @ApiParam({
+    name: 'user_id',
+    description: 'userId',
+    required: true
+  })
+  GetUserProfile(@Param('user_id') user_id: string) {
+    return this.authApiService.getUserInfo(user_id);
+  }
 
+  @Patch('/update-profile/:user_id')
+  @ApiOperation({
+    summary: 'Update user profile',
+  })
+  @ApiBody({
+    type: UpdateUserDto,
+    examples: {
+      example1: {
+        summary: 'Example',
+        value: {
+          user_id: "",
+          phone_number:"0123456789",
+          first_name:"John",
+          last_name:"Doe",
+        }
+      },
+    },
+  })
+  UpadateUserProfile(@Body() info: UpdateUserDto) {
+    return this.authApiService.updateUserInfo(info);
+  }
 }
