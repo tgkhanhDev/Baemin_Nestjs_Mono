@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaPostgresService } from 'src/prisma/prisma.service';
 import { CreatePaymentDto } from './dto/request/create-payment.dto';
 import { payment_status } from '.prismas/client-postgres';
@@ -54,6 +54,7 @@ export class PaymentApiService {
 
         // Step 4: Return the payment and associated transactions
         return {
+            payment_id: updatedPayment.payment_id,
             delivery_address: updatedPayment.delivery_address,
             message: updatedPayment.message,
             status: updatedPayment.status,
@@ -67,6 +68,16 @@ export class PaymentApiService {
 
     //Should add Wallet later
     async payForPayment(payment_id: string) {
+
+        const payment = await this.postgresDAO.payment.findUnique({
+            where: {
+                payment_id
+            }
+        })
+        if(payment.status === payment_status.Paid) {
+            throw new HttpException(`Payment ID: ${payment_id} has been paid.`, HttpStatus.BAD_REQUEST);
+        }
+
         const res = this.postgresDAO.payment.update({
             where: {
                 payment_id
