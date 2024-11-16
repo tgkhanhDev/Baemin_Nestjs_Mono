@@ -64,8 +64,6 @@ export class PaymentApiService {
     }
 
 
-
-
     //Should add Wallet later
     async payForPayment(payment_id: string) {
 
