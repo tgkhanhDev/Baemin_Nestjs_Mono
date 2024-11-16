@@ -30,10 +30,10 @@ export class PaymentApiController {
         value: {
           "delivery_address": "123 Main St",
           "message": "Your order is confirmed!",
-          "status": "Unpaid",
+          // "status": "Unpaid",
           "transactions": [
             {
-              "transaction_id": "generated-id-1",
+              // "transaction_id": "generated-id-1",
               "food_name": "Latte",
               "food_id": "33b92b28-914f-4ead-a6b4-f90134b2ec3c",
               "per_price": 50,
@@ -43,7 +43,7 @@ export class PaymentApiController {
               "shop_id": "a14f9c18-56f0-4a52-8e62-c1524ec0e8e9"
             },
             {
-              "transaction_id": "generated-id-2",
+              // "transaction_id": "generated-id-2",
               "food_id": "3f53a922-abd6-465d-bfbf-d02804ae3bda",
               "food_name": "Pho",
               "per_price": 150,
