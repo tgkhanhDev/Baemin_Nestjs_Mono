@@ -86,3 +86,8 @@ Follow these steps to set up and run the front-end source:
     # or
     bun dev
     ```
+
+3. **Access the local at the following path:**
+    ```bash
+   http://localhost:3000
+   ```
