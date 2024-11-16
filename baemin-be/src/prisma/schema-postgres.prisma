@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prismas/client-postgres"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_POSTGRES_URL")
+}
+
+model CartItem {
+  cart_item_id String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  account_id   String? @db.Uuid
+  food_id      String? @db.Uuid
+  quantity     Int
+  Users        Users?  @relation(fields: [account_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Food {
+  food_id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  food_name      String    @db.VarChar(255)
+  description    String?
+  price          Int
+  type           food_type
+  food_thumbnail String?   @db.VarChar(255)
+  quantity       Int
+  shop_id        String?   @db.Uuid
+  Shop           Shop?     @relation(fields: [shop_id], references: [shop_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Payment {
+  payment_id       String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  delivery_address String?        @db.VarChar(255)
+  message          String?
+  total_cost       Int
+  status           payment_status
+  Transaction      Transaction[]
+}
+
+model Poster {
+  poster_id        String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  poster_thumbnail String? @db.VarChar(255)
+  status           Boolean @default(true)
+}
+
+model Shop {
+  shop_id        String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  shop_name      String        @db.VarChar(255)
+  shop_address   String?       @db.VarChar(255)
+  shop_thumbnail String?       @db.VarChar(255)
+  category       shop_category
+  label          shop_label
+  location       shop_location
+  rating         Float?
+  open_time      DateTime?     @db.Time(6)
+  close_time     DateTime?     @db.Time(6)
+  price_start    Int?
+  price_end      Int?
+  is_open        Boolean       @default(true)
+  owner_id       String?       @db.Uuid
+  Food           Food[]
+}
+
+model Transaction {
+  transaction_id String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  food_id        String?            @db.Uuid
+  food_name      String             @db.VarChar(255)
+  per_price      Int
+  type           food_type
+  food_thumbnail String?            @db.VarChar(255)
+  quantity       Int
+  status         transaction_status
+  shop_id        String?            @db.Uuid
+  payment_id     String?            @db.Uuid
+  Payment        Payment?           @relation(fields: [payment_id], references: [payment_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Users {
+  user_id      String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email        String     @unique @db.VarChar(255)
+  phone_number String     @unique @db.VarChar(15)
+  first_name   String     @db.VarChar(50)
+  last_name    String     @db.VarChar(50)
+  password     String     @db.VarChar(255)
+  role         user_role
+  is_active    Boolean    @default(true)
+  CartItem     CartItem[]
+}
+
+enum food_type {
+  combo
+  sale
+  rice_chicken @map("rice chicken")
+  bubble_tea   @map("bubble tea")
+  none
+}
+
+enum payment_status {
+  Unpaid
+  Paid
+}
+
+enum shop_category {
+  Restaurant
+  Bistro
+  Coffee
+  Dessert
+  Shop_Online @map("Shop Online")
+}
+
+enum shop_label {
+  Food
+  Drink
+  Vege
+  Dessert
+  Noodles
+}
+
+enum shop_location {
+  Ho_Chi_Minh @map("Ho Chi Minh")
+  Ha_Noi      @map("Ha Noi")
+  Da_Nang     @map("Da Nang")
+}
+
+enum transaction_status {
+  not_started @map("not started")
+  in_progress @map("in progress")
+  complete
+}
+
+enum user_role {
+  BUYER
+  SELLER
+  ADMIN
+}

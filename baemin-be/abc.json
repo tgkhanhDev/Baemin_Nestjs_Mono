@@ -1,0 +1,26 @@
+{
+    "delivery_address": "123 Main St",
+    "message": "Your order is confirmed!",
+    "total_cost": 500,
+    "transactions": [
+        {
+            "food_id": "33b92b28-914f-4ead-a6b4-f90134b2ec3c",
+            "food_name": "Macchiato1",
+            "per_price": 501,
+            "type": "bubble_tea",
+            "food_thumbnail": "https://down-vn.img.susercontent.com/vn-11134513-7r98o-lsu9pjg9gdcp31@resize_ss640x400",
+            "quantity": 5,
+            "payment_id": null,
+            "shop_id": "937f6543-a21b-34c5-d678-123456789abc"
+        },
+        {
+            "food_id": "3f53a922-abd6-465d-bfbf-d02804ae3bda",
+            "food_name": "Pho",
+            "per_price": 150,
+            "type": "sale",
+            "food_thumbnail": "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?q=80&w=1950&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "quantity": 5,
+            "shop_id": "32cb9644-5141-4dc6-8e39-9827fb9eae32"
+        }
+    ]
+}
