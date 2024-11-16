@@ -33,6 +33,7 @@ model Payment {
   delivery_address String?        @db.VarChar(255)
   message          String?
   total_cost       Int
+  account_id       String?        @db.Uuid
   status           payment_status
   Transaction      Transaction[]
 }

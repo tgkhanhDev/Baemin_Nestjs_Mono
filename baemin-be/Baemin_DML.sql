@@ -36,11 +36,11 @@ VALUES
 ((SELECT user_id FROM "Users" WHERE email = 'user1@example.com' LIMIT 1), (SELECT food_id FROM "Food" WHERE food_name = 'Chocolate Cake' LIMIT 1), 3);
 
 -- Payment Table
-INSERT INTO "Payment" (delivery_address, message, total_cost, status)
+INSERT INTO "Payment" (delivery_address, message, total_cost, account_id , status)
 VALUES
-('123 Main St, Ho Chi Minh', 'Please deliver quickly', 200, 'Paid'),
-('456 Oak St, Ha Noi', 'Add extra spice', 350, 'Unpaid'),
-('789 Pine St, Da Nang', 'No delivery needed', 240, 'Paid');
+('123 Main St, Ho Chi Minh', 'Please deliver quickly', 200, (SELECT user_id FROM "Users" WHERE email = 'user1@example.com' LIMIT 1) ,'Paid'),
+('456 Oak St, Ha Noi', 'Add extra spice', 350, (SELECT user_id FROM "Users" WHERE email = 'user2@example.com' LIMIT 1) , 'Unpaid'),
+('789 Pine St, Da Nang', 'No delivery needed', 240, (SELECT user_id FROM "Users" WHERE email = 'user2@example.com' LIMIT 1) ,'Paid');
 
 -- Transaction Table
 INSERT INTO "Transaction" (food_id, food_name, per_price, type, food_thumbnail, quantity, status, shop_id, payment_id)

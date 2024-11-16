@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, ValidationPipe } from '@nestjs/common';
 import { AuthApiService } from './auth-api.service';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { LoginDto, RegisterDto } from './dto/request/authen.dto';
@@ -51,7 +51,7 @@ export class AuthApiController {
       },
     },
   })
-  RegisterUser(@Body() registerDto: RegisterDto) {
+  RegisterUser(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) registerDto: RegisterDto) {
     const { email, phone_number, first_name, last_name, password } = registerDto;
     return this.authApiService.registerUser(registerDto);
   }

@@ -7,13 +7,18 @@ import { CreatePaymentDto } from './dto/request/create-payment.dto';
 export class PaymentApiController {
   constructor(private readonly paymentApiService: PaymentApiService) { }
 
-  @Get()
+  @Get(":account_id")
   @ApiOperation({
-    summary: 'Get all payment',
+    summary: 'Get all payment by UserId',
     description: '',
   })
-  async findPayments() {
-    const res = await this.paymentApiService.findAll();
+  @ApiParam({
+    name: 'account_id',
+    type: String,
+    required: true
+  })
+  async findPaymentsByUserId(@Param('account_id') account_id: string) {
+    const res = await this.paymentApiService.findAllByaccountId(account_id);
     return res;
   }
 
@@ -30,6 +35,7 @@ export class PaymentApiController {
         value: {
           "delivery_address": "123 Main St",
           "message": "Your order is confirmed!",
+          "account_id": "",
           // "status": "Unpaid",
           "transactions": [
             {

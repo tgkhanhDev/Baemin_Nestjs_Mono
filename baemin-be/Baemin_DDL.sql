@@ -78,6 +78,7 @@ CREATE TABLE "Payment" (
     delivery_address VARCHAR(255),
     message TEXT,
     total_cost INT NOT NULL,
+    account_id UUID,
     status payment_status NOT NULL
 );
 

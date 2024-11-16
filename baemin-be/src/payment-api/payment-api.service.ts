@@ -13,12 +13,16 @@ export class PaymentApiService {
         private transactionApiService: TransactionApiService
     ) { }
 
-    async findAll() {
-        return this.postgresDAO.payment.findMany();
+    async findAllByaccountId(account_id: string) {
+        return this.postgresDAO.payment.findMany({
+            where: {
+                account_id
+            }
+        });
     }
 
     async createPayment(req: CreatePaymentDto) {
-        const { delivery_address, message, status, transactions } = req;
+        const { delivery_address, message, status, transactions, account_id } = req;
 
         // Step 1: Create the Payment first, without transactions
         const resPayment = await this.postgresDAO.payment.create({
@@ -26,6 +30,7 @@ export class PaymentApiService {
                 delivery_address,
                 total_cost: 0, // Temporary value, to be updated later
                 message,
+                account_id,
                 status: payment_status.Unpaid, // Default to 'Unpaid'
             },
         });
@@ -55,6 +60,7 @@ export class PaymentApiService {
         // Step 4: Return the payment and associated transactions
         return {
             payment_id: updatedPayment.payment_id,
+            account_id: updatedPayment.account_id,
             delivery_address: updatedPayment.delivery_address,
             message: updatedPayment.message,
             status: updatedPayment.status,
