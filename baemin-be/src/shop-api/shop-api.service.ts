@@ -65,6 +65,7 @@ export class ShopApiService {
                         description: true,
                         price: true,
                         type: true,
+                        food_thumbnail: true,
                         Shop: false,
                         shop_id: false
                     }

@@ -64,7 +64,7 @@ export class TransactionApiController {
   //Not yet handle 400 for invalid input
   @Post('')
   @ApiOperation({
-    summary: 'Get all shops by label',
+    summary: 'Create Single Transaction with no payment',
   })
   @ApiBody({
     description: 'Create transaction request body',

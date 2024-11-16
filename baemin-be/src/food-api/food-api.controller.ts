@@ -2,7 +2,7 @@ import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { FoodApiService } from './food-api.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
-import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Food } from './entities/food.entity';
 
 @Controller('food-api')
@@ -27,6 +27,30 @@ export class FoodApiController {
   })
   async findAllFoods() {
     let res = await this.foodApiService.findAll();
+    return res;
+  }
+
+  @Get('/food/:foodId')
+  @ApiOperation({
+    summary: 'Get all food items',
+    // description: 'Fetches a list of all available food items from the database',
+  })
+  @ApiParam({
+    name: 'foodId',
+    required: true,
+    type: String
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetched all food items',
+    type: [Food],  // Array of Food objects as response
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  async findFoodById(@Param('foodId') foodId: string) {
+    let res = await this.foodApiService.findById(foodId);
     return res;
   }
 

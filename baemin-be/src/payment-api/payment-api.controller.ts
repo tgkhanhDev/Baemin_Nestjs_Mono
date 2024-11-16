@@ -19,7 +19,7 @@ export class PaymentApiController {
 
   @Post('')
   @ApiOperation({
-    summary: 'Create payment by label',
+    summary: 'Paying cart/ buy now',
   })
   @ApiBody({
     description: 'Create payment request body',
