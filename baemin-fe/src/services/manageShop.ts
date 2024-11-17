@@ -10,7 +10,6 @@ export const manageShop = {
     if (params.name) queryParams.append('name', params.name);
     if (params.location) queryParams.append('location', params.location);
     if (params.label) queryParams.append('label', params.label);
-    console.log(queryParams.toString());
     
     return api.get<utilsResponse<Shop>>(`/?${queryParams.toString()}`);
   },

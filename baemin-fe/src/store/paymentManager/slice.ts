@@ -20,6 +20,7 @@ export const managePaymentSlice = createSlice({
       .addCase(createPaymentThunk.fulfilled, (state, { payload }) => {
         state.status = "success";
         message.success('Đặt hàng thành công');
+        localStorage.removeItem("orderData")
       })
       .addCase(createPaymentThunk.rejected, (state, { payload }) => {
         state.status = "failed";

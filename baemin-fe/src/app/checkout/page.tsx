@@ -19,6 +19,15 @@ export default function Home() {
   const [userMessage, setUserMessage] = useState("");
   const dispatch = useAppDispatch();
 
+  const [userId, setUserId] = useState<any>(null);
+
+  useEffect(() => {
+    //get user from localstorage
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    user && setUserId(user);
+  }, []);
+
   const handleChangeAddress = (e: any) => {
     setAddress(e.target.value);
   };
@@ -40,9 +49,6 @@ export default function Home() {
         quantity: orderData.food.quantity,
         shop_id: orderData.shop_id,
       });
-
-      // Xóa dữ liệu sau khi đã lấy
-      //localStorage.removeItem("orderData");
     }
   }, []);
 
@@ -61,6 +67,7 @@ export default function Home() {
     const payload: Payment = {
       delivery_address: address,
       message: userMessage || "",
+      account_id: userId || "",
       transactions: [
         {
           food_name: orderDetails.food_name,
@@ -153,7 +160,7 @@ export default function Home() {
             </div>
 
             <div className="col-span-5 flex justify-end items-center gap-3 pr-6">
-              <span className="font-medium">Tổng số tiền (1 sản phẩm):</span>
+              <span className="font-medium">Tổng số tiền:</span>
               <span className="text-beamin font-bold text-lg">₫176.000</span>
             </div>
           </div>
@@ -171,7 +178,7 @@ export default function Home() {
           </div>
           <div className="w-full border-t  flex flex-row justify-between items-center  pt-4  gap-4 mb-4">
             <div className="w-[70%] ml-8">
-              Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo{" "}
+              Nhấn &quot;Đặt hàng&quot; đồng nghĩa với việc bạn đồng ý tuân theo{" "}
               <span className="text-blue-600 text-sm cursor-pointer">
                 Điều khoản Baemin
               </span>

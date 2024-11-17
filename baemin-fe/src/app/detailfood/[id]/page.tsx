@@ -13,7 +13,7 @@ import {
   SearchOutlined,
   StarFilled,
 } from "@ant-design/icons";
-import { Input, InputNumber, Space } from "antd";
+import { Input, InputNumber, message, Space } from "antd";
 import type { InputNumberProps } from "antd";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
@@ -22,6 +22,8 @@ import { useAppDispatch } from "@/src/store";
 import { useShop } from "@/src/hooks/useShop";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { addCartItemThunk } from "@/src/store/cartManager/thunk";
+import { Cart } from "@/src/types/cart";
 export default function Home() {
   const router = useRouter();
   const params = useParams();
@@ -48,6 +50,15 @@ export default function Home() {
     setSearchTerm(e.target.value);
   };
 
+  const [userId, setUserId] = useState<any>(null);
+
+  useEffect(() => {
+    //get user from localstorage
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    user && setUserId(user);
+  }, []);
+
   const filteredFood = shopDetail?.Food?.filter((food) => {
     const matchesType = selectedType ? food.type === selectedType : true;
     const matchesSearch = food.food_name
@@ -56,13 +67,13 @@ export default function Home() {
     return matchesType && matchesSearch;
   });
 
-  const onChange: InputNumberProps['onChange'] = (value) => {
+  const onChange: InputNumberProps["onChange"] = (value) => {
     setQuantity(value as number); // Đảm bảo giá trị là số
   };
 
   const buyNow = (food: any, quantity: number) => {
     if (quantity <= 0) {
-      alert('Vui lòng chọn số lượng hợp lệ!');
+      alert("Vui lòng chọn số lượng hợp lệ!");
       return;
     }
 
@@ -75,8 +86,22 @@ export default function Home() {
     };
 
     // Lưu vào localStorage
-    localStorage.setItem('orderData', JSON.stringify(orderData));
-    router.push('/checkout');
+    localStorage.setItem("orderData", JSON.stringify(orderData));
+    router.push("/checkout");
+  };
+
+  const addCart = async (food_id: string, quantity: number) => {
+    if (quantity <= 0) {
+      message.error("Vui lòng chọn số lượng hợp lệ!");
+      return;
+    }
+
+    const payload: Cart = {
+      account_id: userId,
+      food_id: food_id,
+      quantity: quantity,
+    };
+    await dispatch(addCartItemThunk(payload));
   };
 
   return (
@@ -258,12 +283,14 @@ export default function Home() {
                     className="flex flex-col w-full gap-4 border-b pb-3"
                   >
                     <div className="flex flex-row">
-                    <div className="w-[15%] relative h-16">
+                      <div className="w-[15%] relative h-16">
                         {/* Hiển thị ảnh nếu có, thay thế nếu không có */}
                         <Image
                           fill
                           style={{ objectFit: "cover" }}
-                          src={food?.food_thumbnail || "/images/placeholder.png"}
+                          src={
+                            food?.food_thumbnail || "/images/placeholder.png"
+                          }
                           alt={food.food_name}
                         />
                       </div>
@@ -280,7 +307,10 @@ export default function Home() {
                           ${food.price.toLocaleString()}
                         </span>
                       </div>
-                      <div className="w-[10%] flex justify-center items-center">
+                      <div
+                        className="w-[10%] flex justify-center items-center"
+                        onClick={() => addCart(food.food_id, quantity)}
+                      >
                         <div className="h-6 w-6 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110">
                           <PlusOutlined />
                         </div>
@@ -296,7 +326,10 @@ export default function Home() {
                         />
                       </div>
 
-                      <div className="w-[30%] flex justify-center items-center" onClick={() => buyNow(food, quantity)}>
+                      <div
+                        className="w-[30%] flex justify-center items-center"
+                        onClick={() => buyNow(food, quantity)}
+                      >
                         <div className="h-6 px-5 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110">
                           Buy Now
                         </div>

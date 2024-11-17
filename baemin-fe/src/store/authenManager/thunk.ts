@@ -32,3 +32,18 @@ export const registerThunk = createAsyncThunk(
     }
   }
 )
+
+export const getUserInfoThunk = createAsyncThunk(
+  "getInfo",
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      console.log("userIdThunk", userId);
+      
+      const data = await manageAuthentication.getUserInfo(userId)
+      return data.data
+    } catch (error) {
+      console.log("API error:", error);
+      return rejectWithValue(error);
+    }
+  }
+)

@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 export default function Status({ items }: { items: any[] }) {
   const [current, setCurrent] = useState(0);
   const [status, setStatus] = useState(items);
-  useEffect(() => {
-    setStatus(items);
-  }, [status]);
+  // useEffect(() => {
+  //   setStatus(items);
+  // }, [status]);
   const HanlderClick = (id: any) => {
     const newStatus = status.map((item) => {
       if (

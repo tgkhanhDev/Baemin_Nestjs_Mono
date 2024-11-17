@@ -24,3 +24,12 @@ export interface RegisterRequest {
     confirm_password ?: string, //optional
     // role: user_role
 }
+
+export interface UserInfo {
+    user_id: string;
+    email: string;
+    phone_number: string;
+    first_name: string;
+    last_name: string;
+    role: string;
+}

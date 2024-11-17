@@ -1,6 +1,7 @@
 export interface Payment {
     delivery_address: string
     message: string
+    account_id: string
     transactions: Transaction[]
   }
   
