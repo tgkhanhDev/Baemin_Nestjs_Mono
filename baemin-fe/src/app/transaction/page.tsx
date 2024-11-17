@@ -9,19 +9,38 @@ import { Input, message } from "antd";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Payment } from "@/src/types/payment";
+import { useAppDispatch } from "@/src/store";
+import { getPaymentByAccountIdThunk } from "@/src/store/paymentManager/thunk";
 
 const Page: React.FC = () => {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const router = useRouter();
-  
 
+  const [payment, setPayment] = useState<Payment[] | null>(null)
+  const dispatch = useAppDispatch();
   const warning = () => {
     messageApi.open({
       type: "warning",
       content: "Chức năng vẫn đang được phát triển",
     });
   };
+
+  useEffect(() => {
+    const fetchPayment = async () => {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+      const res = await dispatch(getPaymentByAccountIdThunk(user)).unwrap();
+    
+      res && setPayment(res)
+    }
+
+    fetchPayment()
+
+  },[payment])
+
+
 
   const handleLogin = () => {
     router.push("/profile");
@@ -34,22 +53,29 @@ const Page: React.FC = () => {
         <div className="flex justify-center items-center w-full text-beamin font-semibold text-[26px]">
           Đăng Nhập
         </div>
-        <div className="flex flex-col w-full gap-3">
-          <Input
-            placeholder="Email/Số điện thoại"
-            className="h-[40px]"
-          />
-        </div>
-        <div className="flex flex-col w-full mt-3">
-          <Input.Password
-            placeholder="Mật khẩu"
-            className="h-[40px]"
-            iconRender={(visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-            }
-          />
-        </div>
-        <div className="flex flex-col w-full mt-3">
+        <table className="table-fixed">
+          <thead>
+            <tr>
+              <th>Delivery Address</th>
+              <th>Message</th>
+              <th>Total Cost</th>
+              {/* <th>Order Date</th> */}
+              <th>Order Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {payment && payment.map((item, index) => (
+              <tr key={index}>
+                <td>{item.delivery_address}</td>
+                <td>{item.message}</td>
+                <td>{item?.total_cost}</td>
+                <td>{item?.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* <div className="flex flex-col w-full mt-3">
           <button
             className="w-full h-[40px] uppercase text-white bg-beamin rounded-lg"
             onClick={handleLogin}
@@ -90,7 +116,7 @@ const Page: React.FC = () => {
             {" "}
             Đăng kí
           </Link>
-        </div>
+        </div> */}
       </div>
     </>
   );

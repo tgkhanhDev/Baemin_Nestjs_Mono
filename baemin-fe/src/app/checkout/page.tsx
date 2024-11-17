@@ -17,6 +17,9 @@ export default function Home() {
   const [orderDetails, setOrderDetails] = useState<any>(null);
   const [address, setAddress] = useState("");
   const [userMessage, setUserMessage] = useState("");
+
+  const [totalMoney, setTotalMoney] = useState(0);
+
   const dispatch = useAppDispatch();
 
   const [userId, setUserId] = useState<any>(null);
@@ -53,6 +56,13 @@ export default function Home() {
   }, []);
 
   const detail = orderDetails ? [orderDetails] : [];
+
+  useEffect(() => {
+    if (orderDetails) {
+      const total = orderDetails.per_price * orderDetails.quantity;
+      setTotalMoney(total);
+    }
+  }, [orderDetails]);
 
   const router = useRouter();
   const handleNavigate = () => {
@@ -161,7 +171,7 @@ export default function Home() {
 
             <div className="col-span-5 flex justify-end items-center gap-3 pr-6">
               <span className="font-medium">Tổng số tiền:</span>
-              <span className="text-beamin font-bold text-lg">₫176.000</span>
+              <span className="text-beamin font-bold text-lg">₫{totalMoney}</span>
             </div>
           </div>
         </div>

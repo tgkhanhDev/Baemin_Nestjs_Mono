@@ -13,3 +13,15 @@ export const createPaymentThunk = createAsyncThunk(
     }
   }
 );
+
+export const getPaymentByAccountIdThunk = createAsyncThunk(
+  "getPaymentByAccountId",
+  async (payload: string, { rejectWithValue }) => {
+    try {
+      const data = await createPayment.getPaymentById(payload);
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
