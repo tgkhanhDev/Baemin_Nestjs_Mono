@@ -77,13 +77,13 @@ export default function Home() {
       return;
     }
 
-    const orderData = {
+    const orderData = [{
       shop_id: id,
       food: {
         ...food,
         quantity,
       },
-    };
+    }];
 
     // Lưu vào localStorage
     localStorage.setItem("orderData", JSON.stringify(orderData));
@@ -155,14 +155,12 @@ export default function Home() {
               <div className="flex flex-row gap-4 justify-start items-center my-1 text-[15px]">
                 <div className="flex flex-row gap-1 items-center">
                   <div
-                    className={`w-2 h-2 rounded-full ${
-                      shopDetail?.is_open ? "bg-[#6CC942]" : "bg-[#FF0000]"
-                    }`}
+                    className={`w-2 h-2 rounded-full ${shopDetail?.is_open ? "bg-[#6CC942]" : "bg-[#FF0000]"
+                      }`}
                   ></div>
                   <span
-                    className={`text-sm font-medium ${
-                      shopDetail?.is_open ? "text-[#6CC942]" : "text-[#FF0000]"
-                    }`}
+                    className={`text-sm font-medium ${shopDetail?.is_open ? "text-[#6CC942]" : "text-[#FF0000]"
+                      }`}
                   >
                     {shopDetail?.is_open ? "Mở cửa" : "Đóng cửa"}
                   </span>
@@ -172,28 +170,28 @@ export default function Home() {
                   <span>
                     {shopDetail?.open_time
                       ? new Date(shopDetail.open_time).toLocaleTimeString(
-                          "en-GB",
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            hour12: false,
-                            timeZone: "UTC",
-                          }
-                        )
+                        "en-GB",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          hour12: false,
+                          timeZone: "UTC",
+                        }
+                      )
                       : "Không xác định"}{" "}
                     -{" "}
                     {shopDetail?.close_time
                       ? new Date(shopDetail.close_time).toLocaleTimeString(
-                          "en-GB",
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            hour12: false,
-                            timeZone: "UTC",
-                          }
-                        )
+                        "en-GB",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          hour12: false,
+                          timeZone: "UTC",
+                        }
+                      )
                       : "Không xác định"}
                   </span>
                 </div>
@@ -242,11 +240,10 @@ export default function Home() {
                   (type) => (
                     <li
                       key={type}
-                      className={`cursor-pointer w-fit px-1 my-4 ${
-                        selectedType === type.toLowerCase()
+                      className={`cursor-pointer w-fit px-1 my-4 ${selectedType === type.toLowerCase()
                           ? "bg-blue-500 text-white"
                           : ""
-                      }`}
+                        }`}
                       onClick={() => handleTypeClick(type.toLowerCase())}
                     >
                       {type}
@@ -254,9 +251,8 @@ export default function Home() {
                   )
                 )}
                 <li
-                  className={`cursor-pointer w-fit px-1 my-4 ${
-                    selectedType === null ? "bg-blue-500 text-white" : ""
-                  }`}
+                  className={`cursor-pointer w-fit px-1 my-4 ${selectedType === null ? "bg-blue-500 text-white" : ""
+                    }`}
                   onClick={() => setSelectedType(null)}
                 >
                   Tất cả

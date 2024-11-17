@@ -9,4 +9,6 @@ export const manageCart = {
     api.post<utilsResponse<Cart>>(`/cart-api`, payload),
   getCart: (payload: string) =>
     api.get<ViewCart>(`/cart-api/${payload}`),
+  deleteCart: (cartId: string) =>
+    api.delete<Cart>(`/cart-api/delete-item/${cartId}`),
 };

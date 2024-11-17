@@ -1,5 +1,5 @@
 "use client";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, WindowsFilled } from "@ant-design/icons";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import DetailsCart from "./detailsCart";
@@ -7,6 +7,7 @@ import { Button } from "antd";
 import { ViewCartThunk } from "@/src/store/cartManager/thunk";
 import { useCart } from "@/src/hooks/useCart";
 import { useAppDispatch } from "@/src/store";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,33 @@ export default function Home() {
       dispatch(ViewCartThunk(userId));
     }
   }, [userId, dispatch]);
+
+  const [price, setPrice] = useState(0);
+  const [itemList, setItemList] = useState<any[]>([]);
+  useEffect(() => {
+    console.log("list: ", itemList);
+    
+  }, [itemList])
+
+  const handlePayment = () => {
+    const orderData: any[] = []
+    
+    itemList.map((item) => {
+      const foodItem = {
+        shop_id: item.food.shop_id,
+        food: {
+          ...item.food,
+          quantity: item.quantity
+        }
+      }
+      orderData.push(foodItem)
+    })
+
+    // Lưu vào localStorage
+    localStorage.setItem("orderData", JSON.stringify(orderData));
+
+    window.location.href = "/checkout"
+  }
 
   return (
     <>
@@ -72,14 +100,15 @@ export default function Home() {
             </span>
           </div>
         </div>
-        <DetailsCart Details={viewCart ? [viewCart] : null} />
+        <DetailsCart Details={viewCart ? [viewCart] : null} setPrice={setPrice} itemList={itemList} setItemList={setItemList}/>
         <div className=" flex flex-row fixed bottom-0  w-[90.6%]  mr-16  h-16 bg-white items-center  ">
           <div className="flex flex-row gap-2 w-1/2 h-full items-center justify-end pr-2">
-            <div className=""> Tổng thanh toán (0 Sản phẩm):</div>
-            <div className="text-red-600">₫0 </div>
+            <div className=""> Tổng thanh toán :</div>
+            <div className="text-red-600">₫{price} </div>
             <div>
               <Button
                 href="/checkout"
+                onClick={() => handlePayment()}
                 style={{ background: "#3AC5C9", color: "white" }}
                 className="bg-beamin text-white w-40 h-10 rounded-md hover:brightness-105"
               >

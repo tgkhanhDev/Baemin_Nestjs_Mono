@@ -14,7 +14,7 @@ import { useAppDispatch } from "@/src/store";
 import { Payment } from "@/src/types/payment";
 
 export default function Home() {
-  const [orderDetails, setOrderDetails] = useState<any>(null);
+  const [orderDetails, setOrderDetails] = useState<any[]>([]);
   const [address, setAddress] = useState("");
   const [userMessage, setUserMessage] = useState("");
 
@@ -43,23 +43,35 @@ export default function Home() {
     const savedOrderData = localStorage.getItem("orderData");
     if (savedOrderData) {
       const orderData = JSON.parse(savedOrderData);
-      setOrderDetails({
-        food_name: orderData.food.food_name,
-        food_id: orderData.food.food_id,
-        per_price: orderData.food.price,
-        type: orderData.food.type,
-        food_thumbnail: orderData.food.food_thumbnail,
-        quantity: orderData.food.quantity,
-        shop_id: orderData.shop_id,
-      });
+
+      const orderDetailArr: any[] = []
+
+      orderData.map((item: any) => {
+        const orderItem = {
+          food_name: item.food.food_name,
+          food_id: item.food.food_id,
+          per_price: item.food.price,
+          type: item.food.type,
+          food_thumbnail: item.food.food_thumbnail,
+          quantity: item.food.quantity,
+          shop_id: item.shop_id,
+        }
+        orderDetailArr.push(orderItem)
+      })
+
+      setOrderDetails(orderDetailArr);
     }
   }, []);
 
-  const detail = orderDetails ? [orderDetails] : [];
+  const detail = orderDetails ? orderDetails : [];
 
   useEffect(() => {
     if (orderDetails) {
-      const total = orderDetails.per_price * orderDetails.quantity;
+      let total = 0;
+      orderDetails.map((item: any) => {
+        const price = item.per_price * item.quantity;
+        total += price
+      })
       setTotalMoney(total);
     }
   }, [orderDetails]);
@@ -74,23 +86,30 @@ export default function Home() {
       message.error("Vui lòng nhập đầy đủ địa chỉ nhận hàng của bạn!");
       return;
     }
+    const transactionList: any[] = [];
+
+    orderDetails.map((item: any) => {
+      const transaction = {
+        food_name: item.food_name,
+        food_id: item.food_id,
+        per_price: item.per_price,
+        type: item.type,
+        food_thumbnail: item.food_thumbnail,
+        quantity: item.quantity,
+        shop_id: item.shop_id,
+      };
+      transactionList.push(transaction);
+    });
+
     const payload: Payment = {
       delivery_address: address,
       message: userMessage || "",
       account_id: userId || "",
-      transactions: [
-        {
-          food_name: orderDetails.food_name,
-          food_id: orderDetails.food_id,
-          per_price: orderDetails.per_price,
-          type: orderDetails.type,
-          food_thumbnail: orderDetails.food_thumbnail,
-          quantity: orderDetails.quantity,
-          shop_id: orderDetails.shop_id,
-        },
-      ],
+      transactions: transactionList,
     };
-    await dispatch(createPaymentThunk(payload));
+    await dispatch(createPaymentThunk(payload)).unwrap().then(() => {
+      router.push("/transaction");
+    });
   };
 
   return (
@@ -179,11 +198,11 @@ export default function Home() {
           <div className="w-full   border-t flex flex-col justify-end items-end pt-4  gap-4">
             <div className="flex justify-between w-[30%] ">
               <div className="text-sm text-gray-900">Tổng tiền hàng</div>
-              <div className="text-sm mr-5">₫259.000</div>
+              <div className="text-sm mr-5">₫{totalMoney}</div>
             </div>
             <div className="flex justify-between w-[30%] ">
               <div className="text-sm text-gray-900">Tổng thanh toán</div>
-              <div className="text-2xl mr-5 text-beamin">₫287.000</div>
+              <div className="text-2xl mr-5 text-beamin">₫{totalMoney}</div>
             </div>
           </div>
           <div className="w-full border-t  flex flex-row justify-between items-center  pt-4  gap-4 mb-4">

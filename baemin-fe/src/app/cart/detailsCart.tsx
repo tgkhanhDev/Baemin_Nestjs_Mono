@@ -2,18 +2,42 @@
 import { Button } from "antd";
 import { Butterfly_Kids } from "next/font/google";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ViewCart } from "@/src/types/cart";
+import { useAppDispatch } from "@/src/store";
+import { DeleteCartThunk } from "@/src/store/cartManager/thunk";
+import { toast } from "react-toastify";
 
 export default function DetailsCart({
-  Details,
+  Details, setPrice, setItemList, itemList
 }: {
   Details: ViewCart[] | null;
+  setPrice: any;
+  itemList: any
+  setItemList: any;
 }) {
   // Kiểm tra trường hợp Details là null hoặc mảng rỗng
   if (!Details || Details.length === 0) return <div>No details available</div>;
 
   const flatDetails = Details.flat();
+
+  useEffect(() => {
+    itemList.map((item: any) => {
+      setPrice((prevPrice: any) => prevPrice + item.food.price * item.quantity);
+    })
+  }, [itemList])
+
+  const handleCheckboxChange = (items: any) => {
+    setItemList((prevItemList: any) => {
+      if (itemList.includes(items)) {
+        return prevItemList.filter((item: any) => item !== items);
+      } else {
+        return [...prevItemList, items];
+      }
+    });
+  };
+
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -30,6 +54,7 @@ export default function DetailsCart({
                   id="default-checkbox"
                   type="checkbox"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:ring-offset-gray-800"
+                  onChange={() => handleCheckboxChange(items)}
                 />
                 <div className="relative h-36 w-36">
                   <Image
@@ -62,7 +87,12 @@ export default function DetailsCart({
               <div className="col-span-2 flex items-center justify-center flex-row gap-3">
                 ${items.food?.price * items.quantity}
               </div>
-              <div className="col-span-2 flex items-center justify-center flex-row gap-3">
+              <div className="col-span-2 flex items-center justify-center flex-row gap-3" onClick={() => {
+                dispatch(DeleteCartThunk(items.cart_item_id)).unwrap().then(() => {
+                  toast.success("Delete successfully");
+                  window.location.reload();
+                });
+              }}>
                 <span className="hover:text-red-600 cursor-pointer">Xóa</span>
               </div>
             </div>
