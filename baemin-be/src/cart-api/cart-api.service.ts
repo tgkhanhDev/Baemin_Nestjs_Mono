@@ -36,6 +36,7 @@ export class CartApiService {
                     price: true,
                     type: true,
                     shop_id: true,
+                    food_thumbnail: true,
                     Shop: false
                 }
             })
