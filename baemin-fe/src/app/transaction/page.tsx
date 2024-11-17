@@ -51,7 +51,7 @@ const Page: React.FC = () => {
       {contextHolder}
       <div className="mt-14 w-1/3  bg-white border rounded-2xl flex flex-col p-5 gap-5 pb-8">
         <div className="flex justify-center items-center w-full text-beamin font-semibold text-[26px]">
-          Đăng Nhập
+          Payment
         </div>
         <table className="table-fixed">
           <thead>
