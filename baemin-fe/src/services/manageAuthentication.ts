@@ -1,5 +1,5 @@
 import { apiInstance } from "../constant/apiInstance";
-import { LoginRequest, LoginResponse, RegisterRequest, UserInfo } from "../types/auth";
+import { LoginRequest, LoginResponse, RegisterRequest, UserInfo, UpdateInfo } from "../types/auth";
 import { Food } from "../types/food";
 import { utilsResponse } from "../types/utils";
 
@@ -11,4 +11,6 @@ export const manageAuthentication = {
     register: (req: RegisterRequest) =>
         api.post<LoginResponse>(`/register`, req),
     getUserInfo: (userId: string) => api.get<UserInfo>(`/profile/${userId}`), 
+    updateInfo: (req: UpdateInfo) =>
+        api.patch(`/update-profile/{user_id}`, req),
 };

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Food } from "../../types/food";
-import { LoginRequest, RegisterRequest } from "@/src/types/auth";
+import { LoginRequest, RegisterRequest, UpdateInfo } from "@/src/types/auth";
 import { manageAuthentication } from "@/src/services/manageAuthentication";
 import { toast } from "react-toastify";
 
@@ -40,6 +40,19 @@ export const getUserInfoThunk = createAsyncThunk(
       console.log("userIdThunk", userId);
       
       const data = await manageAuthentication.getUserInfo(userId)
+      return data.data
+    } catch (error) {
+      console.log("API error:", error);
+      return rejectWithValue(error);
+    }
+  }
+)
+
+export const updateInfoThunk = createAsyncThunk(
+  "updateInfo",
+  async (req: UpdateInfo, { rejectWithValue }) => {
+    try { 
+      const data = await manageAuthentication.updateInfo(req)
       return data.data
     } catch (error) {
       console.log("API error:", error);

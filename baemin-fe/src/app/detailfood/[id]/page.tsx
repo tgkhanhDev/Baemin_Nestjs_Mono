@@ -101,6 +101,7 @@ export default function Home() {
       food_id: food_id,
       quantity: quantity,
     };
+    console.log(payload);
     await dispatch(addCartItemThunk(payload));
   };
 

@@ -12,10 +12,8 @@ import { useRouter } from "next/navigation";
 import { LoginRequest } from "@/src/types/auth";
 import { useAppDispatch } from "@/src/store";
 import { loginThunk } from "@/src/store/authenManager/thunk";
-import { useSelector } from "react-redux";
 
 const Page: React.FC = () => {
-  const [passwordVisible, setPasswordVisible] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const router = useRouter();
   const [loginReq, setLoginReq] = useState<LoginRequest>({

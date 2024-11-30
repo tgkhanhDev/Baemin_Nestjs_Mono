@@ -37,12 +37,16 @@ const items: MenuProps["items"] = [
   {
     key: "3",
     label: (
-      <a href="/login" onClick={() => localStorage.removeItem("user")} style={{ fontSize: "16px" }}>
+      <a
+        href="/login"
+        onClick={() => localStorage.removeItem("user")}
+        style={{ fontSize: "16px" }}
+      >
         Log out
       </a>
     ),
     icon: <PoweroffOutlined style={{ fontSize: "16px" }} />,
-  }
+  },
 ];
 
 export default function HeaderNav() {
@@ -59,9 +63,8 @@ export default function HeaderNav() {
   const user = useSelector((state: any) => state.manageAuthen.user);
 
   useEffect(() => {
-    //get user from localstorage
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-    
+
     user && setUserSlice(user);
   }, []);
 
@@ -72,7 +75,6 @@ export default function HeaderNav() {
 
   const onSearch = (value: string) => {
     const params = { name: value, location: selectedCity || undefined };
-    console.log(value)
     dispatch(getShopThunk(params));
   };
 
@@ -125,8 +127,8 @@ export default function HeaderNav() {
           Trang Chủ
         </Button>
         <div className="hover:cursor-pointer">
-          {!userSlice ? (
-            <Button onClick={() => window.location.href = "/login"}>
+          {!userSlice || Object.keys(userSlice).length === 0 ? (
+            <Button onClick={() => (window.location.href = "/login")}>
               Login
             </Button>
           ) : (
@@ -141,7 +143,9 @@ export default function HeaderNav() {
                 onClick={(e) => e.preventDefault()}
                 className="font-normal leading-5 btn-home"
               >
-                <Space style={{ fontSize: "18px", color: "rgb(128, 128, 137)" }}>
+                <Space
+                  style={{ fontSize: "18px", color: "rgb(128, 128, 137)" }}
+                >
                   <SolutionOutlined />
                   Tài Khoản
                 </Space>

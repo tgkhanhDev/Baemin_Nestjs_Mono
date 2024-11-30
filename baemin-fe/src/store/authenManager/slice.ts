@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  loginThunk
+  loginThunk,
+  updateInfoThunk
 } from "./thunk";
 import { toast } from "react-toastify";
 
@@ -22,6 +23,10 @@ export const manageAuthenSlice = createSlice({
       toast.success(`Welcome back to Baemin, ${payload.last_name}`);
       state.user = payload;
       localStorage.setItem("user", JSON.stringify(payload.user_id));
+    });
+    builder.addCase(updateInfoThunk.fulfilled, (state, { payload }) => {
+      console.log("TOAST SUCCESS: ", payload);
+      toast.success("Cập nhật thành công");
     });
   }
 });
