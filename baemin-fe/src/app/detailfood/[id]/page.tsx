@@ -9,9 +9,9 @@ import {
   DollarTwoTone,
   DoubleRightOutlined,
   LikeFilled,
-  PlusOutlined,
   SearchOutlined,
   StarFilled,
+  ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { Input, InputNumber, message, Space } from "antd";
 import type { InputNumberProps } from "antd";
@@ -308,8 +308,8 @@ export default function Home() {
                         className="w-[10%] flex justify-center items-center"
                         onClick={() => addCart(food.food_id, quantity)}
                       >
-                        <div className="h-6 w-6 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110">
-                          <PlusOutlined />
+                        <div className="h-8 w-8 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110">
+                          <ShoppingCartOutlined className="text-xl"/>
                         </div>
                       </div>
 
@@ -327,7 +327,7 @@ export default function Home() {
                         className="w-[30%] flex justify-center items-center"
                         onClick={() => buyNow(food, quantity)}
                       >
-                        <div className="h-6 px-5 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110">
+                        <div className="h-10 px-5 rounded-md flex justify-center items-center bg-beamin text-white font-bold cursor-pointer hover:brightness-110">
                           Buy Now
                         </div>
                       </div>

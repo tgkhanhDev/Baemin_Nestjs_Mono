@@ -3,6 +3,8 @@ import { Button, Select, Dropdown, Space } from "antd";
 import { use, useEffect, useState } from "react";
 import { useAppDispatch } from "@/src/store";
 import { getShopThunk } from "@/src/store/shopManager/thunk";
+import { ViewCartThunk } from "../store/cartManager/thunk";
+import { useCart } from "../hooks/useCart";
 import Search from "antd/es/input/Search";
 import {
   HomeOutlined,
@@ -53,6 +55,8 @@ export default function HeaderNav() {
   const dispatch = useAppDispatch();
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const { Option } = Select;
+  const [userId, setUserId] = useState<any>(null);
+  const { viewCart } = useCart();
   const handleSelectChange = (value: string) => {
     const city = value === "" ? null : value;
     setSelectedCity(city);
@@ -77,6 +81,22 @@ export default function HeaderNav() {
     const params = { name: value, location: selectedCity || undefined };
     dispatch(getShopThunk(params));
   };
+
+  useEffect(() => {
+    //get user from localstorage
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    user && setUserId(user);
+  }, []);
+
+  useEffect(() => {
+    console.log("start");
+    if (userId) {
+      dispatch(ViewCartThunk(userId));
+    }
+  }, [userId, dispatch]);
+
+  const itemCount = Array.isArray(viewCart) ? viewCart.length : 0;
 
   return (
     <div className="w-full h-fix bg-white flex flex-row fixed  py-3 gap-4 justify-items-center	justify-center z-50	">
@@ -164,12 +184,14 @@ export default function HeaderNav() {
           }}
           icon={<ShoppingCartOutlined />}
         ></Button>
-        <span
-          className="text-xs bg-red-600 relative rounded w-full text-white  bottom-3 right-4 text-center"
-          style={{ width: "15px", borderRadius: "50px" }}
-        >
-          1
-        </span>
+        {itemCount !== 0 && (
+          <span
+            className="text-xs bg-red-600 relative rounded w-full text-white bottom-3 right-4 text-center"
+            style={{ width: "15px", borderRadius: "50px" }}
+          >
+            {itemCount}
+          </span>
+        )}
       </div>
     </div>
   );

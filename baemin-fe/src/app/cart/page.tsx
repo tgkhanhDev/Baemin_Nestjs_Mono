@@ -28,7 +28,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log("start");
     if (userId) {
       dispatch(ViewCartThunk(userId));
     }
@@ -166,7 +165,7 @@ export default function Home() {
 
       <Modal
         title="Xác nhận"
-        visible={open}
+        open={open}
         onOk={confirmEmptyCart}
         onCancel={cancelEmptyCart}
         okText="Đồng ý"
