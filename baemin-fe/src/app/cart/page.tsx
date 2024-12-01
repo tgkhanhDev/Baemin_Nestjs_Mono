@@ -7,12 +7,12 @@ import { Button } from "antd";
 import { ViewCartThunk } from "@/src/store/cartManager/thunk";
 import { useCart } from "@/src/hooks/useCart";
 import { useAppDispatch } from "@/src/store";
-import { useRouter } from "next/router";
 
 export default function Home() {
   const dispatch = useAppDispatch();
   const { viewCart } = useCart();
   const [userId, setUserId] = useState<any>(null);
+  const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
     //get user from localstorage
@@ -56,6 +56,17 @@ export default function Home() {
     window.location.href = "/checkout"
   }
 
+  const handleSelectAllChange = () => {
+    setSelectAll((prev) => !prev);
+    setItemList((prevItemList) => {
+      if (!selectAll) {
+        return Array.isArray(viewCart) ? [...viewCart] : [];
+      } else {
+        return [];
+      }
+    });
+  };
+
   return (
     <>
       <div className="flex flex-row w-full h-20 bg-white ">
@@ -72,12 +83,13 @@ export default function Home() {
         <div className=" w-full h-16  bg-white  grid grid-cols-12">
           <div className="pl-8  col-span-4 flex items-center flex-row gap-5">
             <input
-              id="default-checkbox"
+              id="select-all-checkbox"
               type="checkbox"
-              value=""
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded   dark:ring-offset-gray-800 "
+              checked={selectAll}
+              onChange={handleSelectAllChange}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
             />
-            <span className="text-base font-normal"> Món Ăn</span>
+            <span className="text-base font-normal">Chọn tất cả</span>
           </div>
           <div className="col-span-2 flex items-center justify-center flex-row gap-3">
             <span className="text-base font-normal  text-gray-600">
@@ -100,11 +112,17 @@ export default function Home() {
             </span>
           </div>
         </div>
-        <DetailsCart Details={viewCart ? [viewCart] : null} setPrice={setPrice} itemList={itemList} setItemList={setItemList}/>
+        <DetailsCart 
+          Details={viewCart ? [viewCart] : null} 
+          setPrice={setPrice} 
+          itemList={itemList} 
+          setItemList={setItemList} 
+          selectAll={selectAll}
+        />
         <div className=" flex flex-row fixed bottom-0  w-[90.6%]  mr-16  h-16 bg-white items-center  ">
           <div className="flex flex-row gap-2 w-1/2 h-full items-center justify-end pr-2">
             <div className=""> Tổng thanh toán :</div>
-            <div className="text-red-600">₫{price} </div>
+            <div className="text-red-600">${price} </div>
             <div>
               <Button
                 href="/checkout"
