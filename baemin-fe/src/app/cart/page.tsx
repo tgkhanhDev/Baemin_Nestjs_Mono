@@ -1,10 +1,14 @@
 "use client";
-import { ShoppingCartOutlined, WindowsFilled } from "@ant-design/icons";
+import {
+  ShoppingCartOutlined,
+  WindowsFilled,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import DetailsCart from "./detailsCart";
-import { Button } from "antd";
-import { ViewCartThunk } from "@/src/store/cartManager/thunk";
+import { Button, Modal } from "antd";
+import { ViewCartThunk, EmptyCartThunk } from "@/src/store/cartManager/thunk";
 import { useCart } from "@/src/hooks/useCart";
 import { useAppDispatch } from "@/src/store";
 
@@ -13,6 +17,7 @@ export default function Home() {
   const { viewCart } = useCart();
   const [userId, setUserId] = useState<any>(null);
   const [selectAll, setSelectAll] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     //get user from localstorage
@@ -33,28 +38,27 @@ export default function Home() {
   const [itemList, setItemList] = useState<any[]>([]);
   useEffect(() => {
     console.log("list: ", itemList);
-    
-  }, [itemList])
+  }, [itemList]);
 
   const handlePayment = () => {
-    const orderData: any[] = []
-    
+    const orderData: any[] = [];
+
     itemList.map((item) => {
       const foodItem = {
         shop_id: item.food.shop_id,
         food: {
           ...item.food,
-          quantity: item.quantity
-        }
-      }
-      orderData.push(foodItem)
-    })
+          quantity: item.quantity,
+        },
+      };
+      orderData.push(foodItem);
+    });
 
     // Lưu vào localStorage
     localStorage.setItem("orderData", JSON.stringify(orderData));
 
-    window.location.href = "/checkout"
-  }
+    window.location.href = "/checkout";
+  };
 
   const handleSelectAllChange = () => {
     setSelectAll((prev) => !prev);
@@ -67,6 +71,20 @@ export default function Home() {
     });
   };
 
+  const handleEmptyCart = () => {
+    setOpen(true);
+  };
+
+  const confirmEmptyCart = async () => {
+    await dispatch(EmptyCartThunk(userId));
+    setItemList([]);
+    setOpen(false);
+  };
+
+  const cancelEmptyCart = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <div className="flex flex-row w-full h-20 bg-white ">
@@ -77,7 +95,16 @@ export default function Home() {
           <div className="text-2xl  text-beamin ">|</div>
           <div className="text-3xl  text-beamin font-bold">Giỏ hàng</div>
         </div>
-        <div className="w-1/2 h-full flex   items-center gap-3"></div>
+        <div
+          className="w-1/2 h-full flex items-center justify-end gap-3 mr-10 cursor-pointer text-red-500 hover:text-red-300 duration-150"
+          onClick={handleEmptyCart}
+        >
+          <div className="ml-10 text-xl font-bold">
+            <DeleteOutlined />
+          </div>
+          <div className="text-base">|</div>
+          <div className="text-lg font-bold">Xóa giỏ hàng</div>
+        </div>
       </div>
       <div className="mt-4 px-16 flex flex-col gap-4  pb-16 rounded-md">
         <div className=" w-full h-16  bg-white  grid grid-cols-12">
@@ -112,11 +139,11 @@ export default function Home() {
             </span>
           </div>
         </div>
-        <DetailsCart 
-          Details={viewCart ? [viewCart] : null} 
-          setPrice={setPrice} 
-          itemList={itemList} 
-          setItemList={setItemList} 
+        <DetailsCart
+          Details={viewCart ? [viewCart] : null}
+          setPrice={setPrice}
+          itemList={itemList}
+          setItemList={setItemList}
           selectAll={selectAll}
         />
         <div className=" flex flex-row fixed bottom-0  w-[90.6%]  mr-16  h-16 bg-white items-center  ">
@@ -136,6 +163,17 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <Modal
+        title="Xác nhận"
+        visible={open}
+        onOk={confirmEmptyCart}
+        onCancel={cancelEmptyCart}
+        okText="Đồng ý"
+        cancelText="Hủy"
+      >
+        <p>Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?</p>
+      </Modal>
     </>
   );
 }

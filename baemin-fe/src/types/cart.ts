@@ -21,3 +21,10 @@ export interface Food {
   shop_id: string;
   food_thumbnail: string;
 }
+
+export type Update = UpdateCart[]
+
+export interface UpdateCart {
+  cart_item_id: string
+  quantity: string
+}
