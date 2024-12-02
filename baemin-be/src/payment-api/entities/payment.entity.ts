@@ -1,4 +1,4 @@
-import { payment_status, Transaction } from '.prismas/client-postgres';
+import { payment_status, transaction } from '.prismas/client-postgres';
 
 export class Payment {
     payment_id: string;
@@ -11,5 +11,5 @@ export class Payment {
 
     status: payment_status;
 
-    transactions: Transaction[];
+    transactions: transaction[];
 }

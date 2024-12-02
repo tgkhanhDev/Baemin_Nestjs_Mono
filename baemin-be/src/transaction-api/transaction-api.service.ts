@@ -55,7 +55,7 @@ export class TransactionApiService {
                 quantity,
                 shop_id,
                 payment_id: payment_id || null,
-                status: transaction_status.not_started,
+                status: transaction_status.complete,
             }
         });
     }
@@ -80,14 +80,14 @@ export class TransactionApiService {
                 quantity: true,
                 per_price: true,
                 status: true,
-                Payment: {
+                payment: {
                     select: {
                         payment_id: true,
                         delivery_address: true,
                         message: true,
                         status: true,
                         total_cost: true,
-                        Transaction: false
+                        transaction: false
                     }
                 },
             }

@@ -39,13 +39,13 @@ export class CartApiController {
         value: [
           {
             "cart_item_id": "",
-            "quantity": ""
+            "quantity": 1
           }
         ]
       }
     }
   })
-  async updateCartItemByUserIdAndFoodId(@Body('cartInfo') cartInfo: UpdateCartItemRequestDto[]) {
+  async updateCartItemByUserIdAndFoodId(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) cartInfo: UpdateCartItemRequestDto[]) {
     return this.cartApiService.updateCartItem(cartInfo);
   }
 
@@ -74,7 +74,7 @@ export class CartApiController {
         value: {
           "account_id": "",
           "food_id": "",
-          "quantity": ""
+          "quantity": 1
         }
       }
     }

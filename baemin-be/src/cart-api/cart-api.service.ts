@@ -10,7 +10,7 @@ export class CartApiService {
     ) {}
 
     async findCartItemByUserId(account_id: string) {
-        const cartItem: CartItemEntity[] = await this.postgresDAO.cartItem.findMany({
+        const cartItem: CartItemEntity[] = await this.postgresDAO.cartitem.findMany({
             where: {
                 account_id
             },
@@ -37,7 +37,7 @@ export class CartApiService {
                     type: true,
                     shop_id: true,
                     food_thumbnail: true,
-                    Shop: false
+                    shop: false
                 }
             })
 
@@ -50,7 +50,7 @@ export class CartApiService {
     }
 
     async deleteCartItem(cart_item_id: string) {
-        return await this.postgresDAO.cartItem.deleteMany({
+        return await this.postgresDAO.cartitem.deleteMany({
             where: {
                 cart_item_id
             }
@@ -59,7 +59,7 @@ export class CartApiService {
 
     async updateCartItem(cartInfo: UpdateCartItemRequestDto[]) {
         cartInfo.map(async (cartItem) => {
-            await this.postgresDAO.cartItem.update({
+            await this.postgresDAO.cartitem.update({
                 where: {
                     cart_item_id: cartItem.cart_item_id
                 },
@@ -68,10 +68,15 @@ export class CartApiService {
                 }
             })
         })
+
+        return {
+            code: 200,
+            message: "success"
+        }
     }
 
     async emptyCartItem(account_id: string) {
-        return await this.postgresDAO.cartItem.deleteMany({
+        return await this.postgresDAO.cartitem.deleteMany({
             where: {
                 account_id
             }
@@ -81,7 +86,7 @@ export class CartApiService {
     async addItemToCart(req: AddCartItemRequestDto) {
         const {account_id, food_id, quantity} = req
 
-        const item: CartItemEntity =  await this.postgresDAO.cartItem.findFirst({
+        const item: CartItemEntity =  await this.postgresDAO.cartitem.findFirst({
             where: {
                 account_id,
                 food_id
@@ -89,7 +94,7 @@ export class CartApiService {
         })
 
         if(item) {
-            return await this.postgresDAO.cartItem.update({
+            return await this.postgresDAO.cartitem.update({
                 where: {
                     cart_item_id: item.cart_item_id
                 },
@@ -99,7 +104,7 @@ export class CartApiService {
             })
         }
 
-        return await this.postgresDAO.cartItem.create({
+        return await this.postgresDAO.cartitem.create({
             data: {
                 account_id: req.account_id,
                 food_id: req.food_id,

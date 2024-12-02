@@ -8,15 +8,15 @@ datasource db {
   url      = env("DATABASE_POSTGRES_URL")
 }
 
-model CartItem {
+model cartitem {
   cart_item_id String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   account_id   String? @db.Uuid
   food_id      String? @db.Uuid
   quantity     Int
-  Users        Users?  @relation(fields: [account_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  users        users?  @relation(fields: [account_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-model Food {
+model food {
   food_id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   food_name      String    @db.VarChar(255)
   description    String?
@@ -25,26 +25,26 @@ model Food {
   food_thumbnail String?   @db.VarChar(255)
   quantity       Int
   shop_id        String?   @db.Uuid
-  Shop           Shop?     @relation(fields: [shop_id], references: [shop_id], onDelete: Cascade, onUpdate: NoAction)
+  shop           shop?     @relation(fields: [shop_id], references: [shop_id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-model Payment {
+model payment {
   payment_id       String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   delivery_address String?        @db.VarChar(255)
   message          String?
   total_cost       Int
   account_id       String?        @db.Uuid
   status           payment_status
-  Transaction      Transaction[]
+  transaction      transaction[]
 }
 
-model Poster {
+model poster {
   poster_id        String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   poster_thumbnail String? @db.VarChar(255)
   status           Boolean @default(true)
 }
 
-model Shop {
+model shop {
   shop_id        String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   shop_name      String        @db.VarChar(255)
   shop_address   String?       @db.VarChar(255)
@@ -59,10 +59,10 @@ model Shop {
   price_end      Int?
   is_open        Boolean       @default(true)
   owner_id       String?       @db.Uuid
-  Food           Food[]
+  food           food[]
 }
 
-model Transaction {
+model transaction {
   transaction_id String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   food_id        String?            @db.Uuid
   food_name      String             @db.VarChar(255)
@@ -73,10 +73,10 @@ model Transaction {
   status         transaction_status
   shop_id        String?            @db.Uuid
   payment_id     String?            @db.Uuid
-  Payment        Payment?           @relation(fields: [payment_id], references: [payment_id], onDelete: Cascade, onUpdate: NoAction)
+  payment        payment?           @relation(fields: [payment_id], references: [payment_id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-model Users {
+model users {
   user_id      String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   email        String     @unique @db.VarChar(255)
   phone_number String     @unique @db.VarChar(15)
@@ -85,7 +85,7 @@ model Users {
   password     String     @db.VarChar(255)
   role         user_role
   is_active    Boolean    @default(true)
-  CartItem     CartItem[]
+  cartitem     cartitem[]
 }
 
 enum food_type {

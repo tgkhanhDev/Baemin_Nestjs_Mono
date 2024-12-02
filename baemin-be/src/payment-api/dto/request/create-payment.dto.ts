@@ -1,7 +1,6 @@
 import { payment_status } from '.prismas/client-postgres';
-import { Optional } from '@nestjs/common';
 import { Type } from 'class-transformer';
-import { IsArray, IsEnum, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { CreateTransactionDto } from 'src/transaction-api/dto/request/create-transaction.dto';
 
 export class CreatePaymentDto {
@@ -11,9 +10,6 @@ export class CreatePaymentDto {
     @IsString()
     message: string;
 
-    // @IsNumber()
-    // total_cost: number;
-
     @IsEnum(payment_status)
     @IsOptional()
     status: payment_status;
@@ -22,6 +18,7 @@ export class CreatePaymentDto {
     account_id: string;
 
     @IsArray()
-    @Type(() => CreateTransactionDto) // Ensure nested array is properly transformed
+    @ValidateNested({ each: true }) // Validate each item in the array
+    @Type(() => CreateTransactionDto) // Transform array elements
     transactions: CreateTransactionDto[];
 }

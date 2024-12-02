@@ -14,7 +14,7 @@ CREATE TYPE transaction_status AS ENUM ('not started', 'in progress', 'complete'
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create Users Table
-CREATE TABLE "Users" (
+CREATE TABLE users (
     user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Use UUID as primary key and generate random UUID
     email VARCHAR(255) NOT NULL UNIQUE,
     phone_number VARCHAR(15) NOT NULL UNIQUE,
@@ -26,14 +26,14 @@ CREATE TABLE "Users" (
 );
 
 -- Create Poster Table
-CREATE TABLE "Poster" (
+CREATE TABLE poster (
     poster_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Use UUID
     poster_thumbnail VARCHAR(255),
     status BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 -- Create Shop Table
-CREATE TABLE "Shop" (
+CREATE TABLE shop (
     shop_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Use UUID
     shop_name VARCHAR(255) NOT NULL,
     shop_address VARCHAR(255),
@@ -51,7 +51,7 @@ CREATE TABLE "Shop" (
 );
 
 -- Create Food Table
-CREATE TABLE "Food" (
+CREATE TABLE food (
     food_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Use UUID
     food_name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -60,20 +60,20 @@ CREATE TABLE "Food" (
     food_thumbnail VARCHAR(255),  
     quantity INT NOT NULL,
     shop_id UUID,
-    FOREIGN KEY (shop_id) REFERENCES "Shop"(shop_id) ON DELETE CASCADE
+    FOREIGN KEY (shop_id) REFERENCES shop(shop_id) ON DELETE CASCADE
 );
 
 -- Create CartItem Table
-CREATE TABLE "CartItem" (
+CREATE TABLE cartItem (
     cart_item_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Use UUID
     account_id UUID,
     food_id UUID,
     quantity INT NOT NULL,
-    FOREIGN KEY (account_id) REFERENCES "Users"(user_id) ON DELETE CASCADE
+    FOREIGN KEY (account_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 -- Create Payment Table
-CREATE TABLE "Payment" (
+CREATE TABLE payment (
     payment_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Use UUID
     delivery_address VARCHAR(255),
     message TEXT,
@@ -83,7 +83,7 @@ CREATE TABLE "Payment" (
 );
 
 -- Create Transaction Table
-CREATE TABLE "Transaction" (
+CREATE TABLE transaction (
     transaction_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),  -- Use UUID
     food_id UUID,
     food_name VARCHAR(255) NOT NULL,
@@ -94,5 +94,5 @@ CREATE TABLE "Transaction" (
     status transaction_status NOT NULL,
     shop_id UUID, --for navigate from cart
     payment_id UUID,
-    FOREIGN KEY (payment_id) REFERENCES "Payment"(payment_id) ON DELETE CASCADE
+    FOREIGN KEY (payment_id) REFERENCES payment(payment_id) ON DELETE CASCADE
 );
