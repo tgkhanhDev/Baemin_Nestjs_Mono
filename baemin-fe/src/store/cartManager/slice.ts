@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCartItemThunk, ViewCartThunk, EmptyCartThunk } from "./thunk";
+import {
+  addCartItemThunk,
+  ViewCartThunk,
+  EmptyCartThunk,
+  UpdateCartThunk,
+} from "./thunk";
 import { Cart, ViewCart } from "@/src/types/cart";
 import { message } from "antd";
 
@@ -38,6 +43,14 @@ export const manageCartSlice = createSlice({
       .addCase(EmptyCartThunk.rejected, (state, { payload }) => {
         state.status = "failed";
         message.error("Xóa giỏ hàng thất bại! Vui lòng thử lại sau");
+      })
+      .addCase(UpdateCartThunk.fulfilled, (state, { payload }) => {
+        state.status = "failed";
+        message.success("Cập nhật giỏ hàng thành công!");
+      })
+      .addCase(UpdateCartThunk.rejected, (state, { payload }) => {
+        state.status = "failed";
+        message.error("Cập nhật giỏ hàng thất bại! Vui lòng thử lại sau");
       });
   },
 });

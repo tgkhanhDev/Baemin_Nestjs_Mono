@@ -26,5 +26,5 @@ export type Update = UpdateCart[]
 
 export interface UpdateCart {
   cart_item_id: string
-  quantity: string
+  quantity: number
 }

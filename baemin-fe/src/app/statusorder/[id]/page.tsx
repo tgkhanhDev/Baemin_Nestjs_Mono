@@ -3,7 +3,7 @@ import { ShoppingCartOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import React from 'react';
 import Status from './status';
-import DetailsCheckout from '../checkout/detailsCheckout';
+import DetailsOrder from './detailOrder';
 
 const Page: React.FC = () => {
     const status = [
@@ -44,24 +44,6 @@ const Page: React.FC = () => {
             name: 'Đơn hàng hoàn tất',
             st: false
         },
-    ]
-    const detail: any = [
-        {
-            name:'Ga ran',
-            description:'Chiên bột',
-            price:17000,
-            quantity:2,
-            totalprice:17000,
-            img:'/food/ga1.jpg'
-        },
-        {
-            name:'Ga ran',
-            description:'Chiên bột',
-            price:17000,
-            quantity:2,
-            totalprice:17000,
-            img:'/food/ga1.jpg'
-        }
     ]
     return (
         <>
@@ -143,7 +125,7 @@ const Page: React.FC = () => {
                             </div>
                         </div>
                         {/* <div className='w-full mt-2 border-t'>
-                            <DetailsCheckout items={detail}  />
+                            <DetailsOrder items={detail}  />
                         </div> */}
                     </div>
                 </div>

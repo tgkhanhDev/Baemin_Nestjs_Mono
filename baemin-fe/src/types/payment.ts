@@ -20,6 +20,19 @@ export interface PaymentHistory {
   delivery_address: string;
   message: string;
   total_cost: number;
-  account_id: string;
+  account_id?: string;
   status: string;
+}
+
+export interface ViewOrder {
+  transaction_id: string;
+  food_id: string;
+  food_name: string;
+  food_thumbnail: string;
+  shop_id: string;
+  type: string;
+  quantity: number;
+  per_price: number;
+  status: string;
+  Payment: PaymentHistory;
 }

@@ -54,7 +54,10 @@ const Page: React.FC = () => {
               payment.map((item, index) => (
                 <tr
                   key={index}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                  className={`cursor-pointer hover:bg-gray-50 duration-150 ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-100"
+                  }`}
+                  onClick={() => router.push(`/statusorder/${item.payment_id}`)}
                 >
                   <td className="py-3 px-4 border-b text-gray-600">
                     {item.delivery_address}
@@ -63,15 +66,15 @@ const Page: React.FC = () => {
                     {item.message === "" ? "No message" : item.message}
                   </td>
                   <td className="py-3 px-4 border-b text-right text-gray-600">
-                    {item.total_cost.toLocaleString()}$
+                    ${item.total_cost.toLocaleString()}
                   </td>
                   <td
-                    className={`py-3 px-4 border-b text-gray-600 ${
-                      item.status === "Delivered"
+                    className={`py-3 px-4 border-b text-gray-600 font-semibold ${
+                      item.status === "Paid"
                         ? "text-green-600"
-                        : item.status === "Pending"
-                        ? "text-yellow-600"
-                        : "text-red-600"
+                        : item.status === "Unpaid"
+                        ? "text-red-600"
+                        : "text-yellow-600"
                     }`}
                   >
                     {item.status}

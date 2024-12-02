@@ -241,8 +241,8 @@ export default function Home() {
                   (type) => (
                     <li
                       key={type}
-                      className={`cursor-pointer w-fit px-1 my-4 ${selectedType === type.toLowerCase()
-                          ? "bg-blue-500 text-white"
+                      className={`cursor-pointer w-[100%] px-1 my-4 duration-150 py-2 flex items-center ${selectedType === type.toLowerCase()
+                          ? "bg-blue-500 text-white duration-150 py-2 flex items-center"
                           : ""
                         }`}
                       onClick={() => handleTypeClick(type.toLowerCase())}
@@ -252,7 +252,7 @@ export default function Home() {
                   )
                 )}
                 <li
-                  className={`cursor-pointer w-fit px-1 my-4 ${selectedType === null ? "bg-blue-500 text-white" : ""
+                  className={`cursor-pointer px-1 my-4 w-[100%] py-2 flex items-center duration-150 ${selectedType === null ? "bg-blue-500 text-white" : ""
                     }`}
                   onClick={() => setSelectedType(null)}
                 >
