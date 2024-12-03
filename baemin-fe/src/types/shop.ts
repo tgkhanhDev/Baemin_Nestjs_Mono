@@ -37,5 +37,5 @@ export interface ShopDetail {
   price_start: number;
   price_end: number;
   is_open: boolean;
-  Food: Food[];
+  food: Food[];
 }

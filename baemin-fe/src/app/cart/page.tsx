@@ -1,13 +1,9 @@
 "use client";
-import {
-  ShoppingCartOutlined,
-  WindowsFilled,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { ShoppingCartOutlined, DeleteOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import DetailsCart from "./detailsCart";
-import { Button, Modal } from "antd";
+import { Button, Modal, Checkbox } from "antd";
 import {
   ViewCartThunk,
   EmptyCartThunk,
@@ -31,7 +27,6 @@ export default function Home() {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     user && setUserId(user);
-    console.log("user ne: ", user);
   }, []);
 
   useEffect(() => {
@@ -92,8 +87,11 @@ export default function Home() {
   };
 
   const handleUpdateCart = () => {
-    console.log(updatedItems)
-    dispatch(UpdateCartThunk(updatedItems));
+    dispatch(UpdateCartThunk(updatedItems))
+      .unwrap()
+      .then(() => {
+        setUpdatedItems([]);
+      });
   };
 
   return (
@@ -131,13 +129,7 @@ export default function Home() {
       <div className="mt-4 px-16 flex flex-col gap-4  pb-16 rounded-md">
         <div className=" w-full h-16  bg-white  grid grid-cols-12">
           <div className="pl-8  col-span-4 flex items-center flex-row gap-5">
-            <input
-              id="select-all-checkbox"
-              type="checkbox"
-              checked={selectAll}
-              onChange={handleSelectAllChange}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
-            />
+            <Checkbox checked={selectAll} onChange={handleSelectAllChange} />
             <span className="text-base font-normal">Chọn tất cả</span>
           </div>
           <div className="col-span-2 flex items-center justify-center flex-row gap-3">
@@ -179,6 +171,7 @@ export default function Home() {
                 onClick={() => handlePayment()}
                 style={{ background: "#3AC5C9", color: "white" }}
                 className="bg-beamin text-white w-40 h-10 rounded-md hover:brightness-105"
+                disabled={price === 0}
               >
                 Thanh toán
               </Button>

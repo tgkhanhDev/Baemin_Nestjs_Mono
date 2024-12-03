@@ -1,5 +1,5 @@
 "use client";
-import { Button, InputNumber, InputNumberProps } from "antd";
+import { Button, InputNumber, Checkbox } from "antd";
 import { Butterfly_Kids } from "next/font/google";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -68,7 +68,6 @@ export default function DetailsCart({
 
   const dispatch = useAppDispatch();
   const [hiddenItems, setHiddenItems] = useState<Set<string>>(new Set());
-  const [quantity, setQuantity] = useState(0);
 
   const handleDelete = (itemId: string) => {
     setHiddenItems((prev) => new Set(prev).add(itemId));
@@ -129,12 +128,9 @@ export default function DetailsCart({
                 {/* Lặp qua các item trong cart */}
                 <div className="w-full grid grid-cols-12">
                   <div className="pl-8 col-span-4 flex items-center flex-row gap-3">
-                    <input
-                      id="default-checkbox"
-                      type="checkbox"
-                      checked={itemList.includes(items)}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:ring-offset-gray-800"
+                    <Checkbox
                       onChange={() => handleCheckboxChange(items)}
+                      checked={itemList.includes(items)}
                     />
                     <div className="relative h-36 w-36">
                       <Image

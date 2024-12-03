@@ -190,7 +190,7 @@ export default function Home() {
 
             <div className="col-span-5 flex justify-end items-center gap-3 pr-6">
               <span className="font-medium">Tổng số tiền:</span>
-              <span className="text-beamin font-bold text-lg">₫{totalMoney}</span>
+              <span className="text-beamin font-bold text-lg">${totalMoney}</span>
             </div>
           </div>
         </div>
@@ -198,11 +198,11 @@ export default function Home() {
           <div className="w-full   border-t flex flex-col justify-end items-end pt-4  gap-4">
             <div className="flex justify-between w-[30%] ">
               <div className="text-sm text-gray-900">Tổng tiền hàng</div>
-              <div className="text-sm mr-5">₫{totalMoney}</div>
+              <div className="text-sm mr-5">${totalMoney}</div>
             </div>
             <div className="flex justify-between w-[30%] ">
               <div className="text-sm text-gray-900">Tổng thanh toán</div>
-              <div className="text-2xl mr-5 text-beamin">₫{totalMoney}</div>
+              <div className="text-2xl mr-5 text-beamin">${totalMoney}</div>
             </div>
           </div>
           <div className="w-full border-t  flex flex-row justify-between items-center  pt-4  gap-4 mb-4">

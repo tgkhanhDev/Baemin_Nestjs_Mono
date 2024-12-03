@@ -59,7 +59,7 @@ export default function Home() {
     user && setUserId(user);
   }, []);
 
-  const filteredFood = shopDetail?.Food?.filter((food) => {
+  const filteredFood = shopDetail?.food?.filter((food) => {
     const matchesType = selectedType ? food.type === selectedType : true;
     const matchesSearch = food.food_name
       .toLowerCase()
