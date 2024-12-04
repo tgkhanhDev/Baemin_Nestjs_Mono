@@ -74,7 +74,7 @@ export default function DetailsCart({
     dispatch(DeleteCartThunk(itemId))
       .unwrap()
       .then(() => {
-        toast.success("Delete successfully");
+        toast.success("Xóa sản phẩm thành công");
       })
       .catch(() => {
         setHiddenItems((prev) => {
@@ -82,7 +82,7 @@ export default function DetailsCart({
           newSet.delete(itemId); // Show the item again if deletion fails
           return newSet;
         });
-        toast.error("Delete failed");
+        toast.error("Xóa sản phẩm thất bại");
       });
   };
 

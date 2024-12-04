@@ -12,6 +12,7 @@ import { Input, message } from "antd";
 import { createPaymentThunk } from "@/src/store/paymentManager/thunk";
 import { useAppDispatch } from "@/src/store";
 import { Payment } from "@/src/types/payment";
+import axios from "axios";
 
 export default function Home() {
   const [orderDetails, setOrderDetails] = useState<any[]>([]);
@@ -29,6 +30,33 @@ export default function Home() {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     user && setUserId(user);
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+
+          // Gọi Nominatim API, Google chơi trả phí ai chơi-_-
+          const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=jsonv2`;
+
+          try {
+            const response = await axios.get(url);
+            if (response.data && response.data.display_name) {
+              setAddress(response.data.display_name);
+            } else {
+              console.error("Không tìm thấy địa chỉ từ tọa độ.");
+            }
+          } catch (error) {
+            console.error("Lỗi khi gọi Nominatim API:", error);
+          }
+        },
+        (error) => {
+          console.error("Lỗi khi lấy vị trí:", error.message);
+        }
+      );
+    } else {
+      console.error("Geolocation không được hỗ trợ trên trình duyệt này.");
+    }
   }, []);
 
   const handleChangeAddress = (e: any) => {
@@ -44,7 +72,7 @@ export default function Home() {
     if (savedOrderData) {
       const orderData = JSON.parse(savedOrderData);
 
-      const orderDetailArr: any[] = []
+      const orderDetailArr: any[] = [];
 
       orderData.map((item: any) => {
         const orderItem = {
@@ -55,9 +83,9 @@ export default function Home() {
           food_thumbnail: item.food.food_thumbnail,
           quantity: item.food.quantity,
           shop_id: item.shop_id,
-        }
-        orderDetailArr.push(orderItem)
-      })
+        };
+        orderDetailArr.push(orderItem);
+      });
 
       setOrderDetails(orderDetailArr);
     }
@@ -70,16 +98,13 @@ export default function Home() {
       let total = 0;
       orderDetails.map((item: any) => {
         const price = item.per_price * item.quantity;
-        total += price
-      })
+        total += price;
+      });
       setTotalMoney(total);
     }
   }, [orderDetails]);
 
   const router = useRouter();
-  const handleNavigate = () => {
-    router.push("/statusorder");
-  };
 
   const handleBuy = async () => {
     if (!address) {
@@ -107,9 +132,11 @@ export default function Home() {
       account_id: userId || "",
       transactions: transactionList,
     };
-    await dispatch(createPaymentThunk(payload)).unwrap().then(() => {
-      router.push("/transaction");
-    });
+    await dispatch(createPaymentThunk(payload))
+      .unwrap()
+      .then(() => {
+        router.push("/transaction");
+      });
   };
 
   return (
@@ -190,7 +217,9 @@ export default function Home() {
 
             <div className="col-span-5 flex justify-end items-center gap-3 pr-6">
               <span className="font-medium">Tổng số tiền:</span>
-              <span className="text-beamin font-bold text-lg">${totalMoney}</span>
+              <span className="text-beamin font-bold text-lg">
+                ${totalMoney}
+              </span>
             </div>
           </div>
         </div>
