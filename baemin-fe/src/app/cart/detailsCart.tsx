@@ -1,5 +1,5 @@
 "use client";
-import { Button, InputNumber, Checkbox } from "antd";
+import { Button, InputNumber, Checkbox, Skeleton } from "antd";
 import { Butterfly_Kids } from "next/font/google";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { ViewCart } from "@/src/types/cart";
 import { useAppDispatch } from "@/src/store";
 import { DeleteCartThunk } from "@/src/store/cartManager/thunk";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function DetailsCart({
   Details,
@@ -15,6 +16,7 @@ export default function DetailsCart({
   itemList,
   selectAll,
   setUpdatedItems,
+  loading,
 }: {
   Details: ViewCart[] | null;
   setPrice: any;
@@ -24,11 +26,18 @@ export default function DetailsCart({
   setUpdatedItems: React.Dispatch<
     React.SetStateAction<{ cart_item_id: string; quantity: number }[]>
   >;
+  loading: boolean;
 }) {
   // Kiểm tra trường hợp Details là null hoặc mảng rỗng
-  if (!Details || Details.length === 0) return <div>No details available</div>;
+  if (!loading && (!Details || Details.length === 0))
+    return (
+      <div className="text-center text-gray-500 py-10 text-lg">
+        No details available
+      </div>
+    );
 
-  const flatDetails = Details.flat();
+  const flatDetails = Details?.flat() || [];
+  const router = useRouter();
 
   useEffect(() => {
     const totalPrice = itemList.reduce(
@@ -115,68 +124,124 @@ export default function DetailsCart({
     }
   };
 
+  const CartItemSkeleton = () => {
+    return (
+      <div className="w-full flex flex-col bg-white rounded-md">
+        <div className="w-full border-t border-b border-solid border-gray-600 py-3">
+          {/* Lặp qua các item trong cart */}
+          <div className="w-full grid grid-cols-12">
+            <div className="pl-8 col-span-4 flex items-center gap-3">
+              <Checkbox disabled />
+              <div className="relative h-36 w-36 flex justify-center items-center">
+                <Skeleton.Image active className="" />
+              </div>
+              <Skeleton
+                active
+                title={false}
+                paragraph={{
+                  rows: 2,
+                  width: ["50%", "80%"],
+                }}
+              />
+            </div>
+            <div className="col-span-2 flex items-center justify-center flex-row gap-3">
+              <Skeleton.Input active style={{ width: "60%" }} />
+            </div>
+            <div className="col-span-2 flex items-center justify-center flex-row gap-3">
+              <Skeleton.Input active style={{ width: "60%" }} />
+            </div>
+            <div className="col-span-2 flex items-center justify-center flex-row gap-3">
+              <Skeleton.Input active style={{ width: "60%" }} />
+            </div>
+            <div className="col-span-2 flex items-center justify-center flex-row gap-3">
+              <Skeleton.Button active style={{ width: "50%" }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const handleNavigate = (id: string) => {
+    router.push(`/detailfood/${id}`);
+  };
+
   return (
     <>
-      {flatDetails.map(
-        (items, index) =>
-          !hiddenItems.has(items.cart_item_id) && (
-            <div
-              key={items.cart_item_id || index}
-              className="w-full flex flex-col bg-white rounded-md"
-            >
-              <div className="w-full border-t border-b border-solid border-gray-600 py-3">
-                {/* Lặp qua các item trong cart */}
-                <div className="w-full grid grid-cols-12">
-                  <div className="pl-8 col-span-4 flex items-center flex-row gap-3">
-                    <Checkbox
-                      onChange={() => handleCheckboxChange(items)}
-                      checked={itemList.includes(items)}
-                    />
-                    <div className="relative h-36 w-36">
-                      <Image
-                        fill
-                        style={{ objectFit: "cover" }}
-                        src={items?.food?.food_thumbnail || "/images/all.png"} // Nếu không có ảnh, dùng ảnh mặc định
-                        alt={items.food.food_name}
-                      />
+      {loading
+        ? Array.from({ length: 5 }).map((_, index) => (
+            <CartItemSkeleton key={index} />
+          ))
+        : flatDetails.map(
+            (items, index) =>
+              !hiddenItems.has(items.cart_item_id) && (
+                <div
+                  key={items.cart_item_id || index}
+                  className="w-full flex flex-col bg-white rounded-md"
+                >
+                  <div className="w-full border-t border-b border-solid border-gray-600 py-3">
+                    {/* Lặp qua các item trong cart */}
+                    <div className="w-full grid grid-cols-12">
+                      <div className="pl-8 col-span-4 flex items-center flex-row gap-3">
+                        <Checkbox
+                          onChange={() => handleCheckboxChange(items)}
+                          checked={itemList.includes(items)}
+                        />
+                        <div
+                          className="relative h-36 w-36 cursor-pointer"
+                          onClick={() => handleNavigate(items.food.shop_id)}
+                        >
+                          <Image
+                            fill
+                            style={{ objectFit: "cover" }}
+                            src={
+                              items?.food?.food_thumbnail || "/images/all.png"
+                            } // Nếu không có ảnh, dùng ảnh mặc định
+                            alt={items.food.food_name}
+                          />
+                        </div>
+                        <div
+                          className="flex flex-col gap-3 cursor-pointer"
+                          onClick={() => handleNavigate(items.food.shop_id)}
+                        >
+                          <span className="text-base">
+                            {items.food?.food_name}
+                          </span>
+                          <span className="text-sm text-gray-600">
+                            {items.food?.description}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="col-span-2 flex items-center justify-center flex-row gap-3">
+                        ${items.food?.price}
+                      </div>
+                      <div className="col-span-2 flex items-center justify-center flex-row gap-3">
+                        <InputNumber
+                          size="middle"
+                          min={1}
+                          max={99}
+                          defaultValue={items.quantity}
+                          onChange={(value) =>
+                            onChange(value, items.cart_item_id, items.quantity)
+                          }
+                        />
+                      </div>
+                      <div className="col-span-2 flex items-center justify-center flex-row gap-3">
+                        ${items.food?.price * items.quantity}
+                      </div>
+                      <div
+                        className="col-span-2 flex items-center justify-center flex-row gap-3"
+                        onClick={() => handleDelete(items.cart_item_id)}
+                      >
+                        <span className="hover:text-red-600 duration-150 font-semibold cursor-pointer">
+                          Xóa
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-3">
-                      <span className="text-base">{items.food?.food_name}</span>
-                      <span className="text-sm text-gray-600">
-                        {items.food?.description}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="col-span-2 flex items-center justify-center flex-row gap-3">
-                    ${items.food?.price}
-                  </div>
-                  <div className="col-span-2 flex items-center justify-center flex-row gap-3">
-                    <InputNumber
-                      size="middle"
-                      min={1}
-                      max={99}
-                      defaultValue={items.quantity}
-                      onChange={(value) =>
-                        onChange(value, items.cart_item_id, items.quantity)
-                      }
-                    />
-                  </div>
-                  <div className="col-span-2 flex items-center justify-center flex-row gap-3">
-                    ${items.food?.price * items.quantity}
-                  </div>
-                  <div
-                    className="col-span-2 flex items-center justify-center flex-row gap-3"
-                    onClick={() => handleDelete(items.cart_item_id)}
-                  >
-                    <span className="hover:text-red-600 duration-150 font-semibold cursor-pointer">
-                      Xóa
-                    </span>
                   </div>
                 </div>
-              </div>
-            </div>
-          )
-      )}
+              )
+          )}
     </>
   );
 }

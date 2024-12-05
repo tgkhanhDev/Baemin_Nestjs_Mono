@@ -4,20 +4,24 @@ import {
   AccountBookOutlined,
   CompassOutlined,
   ShoppingCartOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
 import DetailsCheckout from "./detailsCheckout";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Input, message } from "antd";
+import { Input, message, Spin } from "antd";
 import { createPaymentThunk } from "@/src/store/paymentManager/thunk";
+import { EmptyCartThunk } from "@/src/store/cartManager/thunk";
 import { useAppDispatch } from "@/src/store";
 import { Payment } from "@/src/types/payment";
 import axios from "axios";
+import { usePayment } from "@/src/hooks/usePayment";
 
 export default function Home() {
   const [orderDetails, setOrderDetails] = useState<any[]>([]);
   const [address, setAddress] = useState("");
   const [userMessage, setUserMessage] = useState("");
+  const { loading } = usePayment();
 
   const [totalMoney, setTotalMoney] = useState(0);
 
@@ -37,7 +41,7 @@ export default function Home() {
           const { latitude, longitude } = position.coords;
 
           // Gọi Nominatim API, Google chơi trả phí ai chơi-_-
-          const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=jsonv2`;
+          const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=jsonv2&accept-language=vi`;
 
           try {
             const response = await axios.get(url);
@@ -135,6 +139,8 @@ export default function Home() {
     await dispatch(createPaymentThunk(payload))
       .unwrap()
       .then(() => {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        dispatch(EmptyCartThunk(user));
         router.push("/transaction");
       });
   };
@@ -242,13 +248,21 @@ export default function Home() {
               </span>
             </div>
             <div className="w-[30%] pl-48 ">
-              <button
-                // onClick={handleNavigate}
-                onClick={handleBuy}
-                className="p-1 bg-beamin text-white w-36 rounded-md h-10 hover:brightness-105"
-              >
-                Đặt hàng
-              </button>
+              {loading ? (
+                <button
+                  className="p-1 bg-beamin text-white w-36 rounded-md h-10 hover:brightness-105"
+                >
+                  <Spin indicator={<LoadingOutlined style={{ color: "#fff" }} spin />} size="default" />
+                </button>
+              ) : (
+                <button
+                  // onClick={handleNavigate}
+                  onClick={handleBuy}
+                  className="p-1 bg-beamin text-white w-36 rounded-md h-10 hover:brightness-105"
+                >
+                  Đặt hàng
+                </button>
+              )}
             </div>
           </div>
         </div>

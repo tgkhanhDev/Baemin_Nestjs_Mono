@@ -91,7 +91,6 @@ export default function HeaderNav() {
   }, []);
 
   useEffect(() => {
-    console.log("start");
     if (userId) {
       dispatch(ViewCartThunk(userId));
     }

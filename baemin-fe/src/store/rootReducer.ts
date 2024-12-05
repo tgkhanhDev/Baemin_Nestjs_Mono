@@ -4,6 +4,7 @@ import { manageShopReducer } from "./shopManager/slice";
 import { manageAuthenReducer } from "./authenManager/slice";
 import { managePaymentReducer } from "./paymentManager/slice";
 import { manageCartReducer } from "./cartManager/slice";
+import { manageTransactionReducer } from "./transactionManager/slice"
 
 export const rootReducer = combineReducers({
   manageFood: manageFoodReducer,
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
   manageAuthen: manageAuthenReducer,
   managePayment: managePaymentReducer,
   manageCart: manageCartReducer,
+  manageTransaction: manageTransactionReducer,
 });

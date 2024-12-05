@@ -10,4 +10,7 @@ export const createPayment = {
 
   getPaymentById: (id: string) =>
     api.get<PaymentHistory[]>(`/payment/${id}`),
+
+  payForPayment: (payment_id: string) => 
+    api.patch(`/payment/${payment_id}`)
 };

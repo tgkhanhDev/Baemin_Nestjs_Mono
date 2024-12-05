@@ -1,9 +1,8 @@
 "use client";
 import { ShoppingCartOutlined, DeleteOutlined } from "@ant-design/icons";
-import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import DetailsCart from "./detailsCart";
-import { Button, Modal, Checkbox } from "antd";
+import { Button, Modal, Checkbox, message } from "antd";
 import {
   ViewCartThunk,
   EmptyCartThunk,
@@ -14,7 +13,7 @@ import { useAppDispatch } from "@/src/store";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-  const { viewCart } = useCart();
+  const { viewCart, loading } = useCart();
   const [userId, setUserId] = useState<any>(null);
   const [selectAll, setSelectAll] = useState(false);
   const [open, setOpen] = useState(false);
@@ -76,10 +75,17 @@ export default function Home() {
     setOpen(true);
   };
 
-  const confirmEmptyCart = async () => {
-    await dispatch(EmptyCartThunk(userId));
-    setItemList([]);
-    setOpen(false);
+  const confirmEmptyCart = () => {
+    dispatch(EmptyCartThunk(userId))
+      .unwrap()
+      .then(() => {
+        message.success("Xóa giỏ hàng thành công!");
+        setItemList([]);
+        setOpen(false);
+      })
+      .catch(() => {
+        message.error("Xóa giỏ hàng thất bại! Vui lòng thử lại sau");
+      });
   };
 
   const cancelEmptyCart = () => {
@@ -160,6 +166,7 @@ export default function Home() {
           setItemList={setItemList}
           selectAll={selectAll}
           setUpdatedItems={setUpdatedItems}
+          loading={loading}
         />
         <div className=" flex flex-row fixed bottom-0  w-[90.6%]  mr-16  h-16 bg-white items-center  ">
           <div className="flex flex-row gap-2 w-1/2 h-full items-center justify-end pr-2">

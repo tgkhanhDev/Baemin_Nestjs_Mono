@@ -9,7 +9,7 @@ import { useShop } from "@/src/hooks/useShop";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-  const { shop } = useShop();
+  const { shop, loading } = useShop();
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export default function Home() {
         </div>
         <div className="col-span-9 w-full  pt-3 pr-8 gap-3 flex flex-col">
           <ScrollBar items={banneritems}></ScrollBar>
-          <ScrollFood items={shop}></ScrollFood>
+          <ScrollFood items={shop} loading={loading}></ScrollFood>
         </div>
       </div>
     </>

@@ -11,11 +11,13 @@ import { message } from "antd";
 type StateType = {
   status: string;
   viewCart: ViewCart | null;
+  loading: boolean;
 };
 
 const initialState: StateType = {
   status: "",
   viewCart: null,
+  loading: false,
 };
 
 export const manageCartSlice = createSlice({
@@ -32,17 +34,19 @@ export const manageCartSlice = createSlice({
         state.status = "failed";
         message.error("Thêm vào giỏ hàng thất bại! Vui lòng thử lại sau");
       })
+      .addCase(ViewCartThunk.pending, (state, { payload }) => {
+        state.loading = true;
+      })
       .addCase(ViewCartThunk.fulfilled, (state, { payload }) => {
         state.viewCart = payload;
+        state.loading = false;
       })
       .addCase(EmptyCartThunk.fulfilled, (state) => {
         state.status = "success";
         state.viewCart = null;
-        message.success("Xóa giỏ hàng thành công!");
       })
       .addCase(EmptyCartThunk.rejected, (state, { payload }) => {
         state.status = "failed";
-        message.error("Xóa giỏ hàng thất bại! Vui lòng thử lại sau");
       })
       .addCase(UpdateCartThunk.fulfilled, (state, { payload }) => {
         state.status = "failed";
