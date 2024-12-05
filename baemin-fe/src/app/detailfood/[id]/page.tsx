@@ -17,7 +17,7 @@ import { useAppDispatch } from "@/src/store";
 import { useShop } from "@/src/hooks/useShop";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { addCartItemThunk } from "@/src/store/cartManager/thunk";
+import { addCartItemThunk, ViewCartThunk } from "@/src/store/cartManager/thunk";
 import { Cart } from "@/src/types/cart";
 export default function Home() {
   const router = useRouter();
@@ -100,6 +100,7 @@ export default function Home() {
     };
     console.log(payload);
     await dispatch(addCartItemThunk(payload));
+    dispatch(ViewCartThunk(userId))
   };
 
   const ShopDetailSkeleton = () => {

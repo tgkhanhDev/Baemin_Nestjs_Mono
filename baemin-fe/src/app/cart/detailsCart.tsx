@@ -5,7 +5,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { ViewCart } from "@/src/types/cart";
 import { useAppDispatch } from "@/src/store";
-import { DeleteCartThunk } from "@/src/store/cartManager/thunk";
+import { DeleteCartThunk, ViewCartThunk } from "@/src/store/cartManager/thunk";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
@@ -35,6 +35,14 @@ export default function DetailsCart({
         No details available
       </div>
     );
+  const [userId, setUserId] = useState<any>(null);
+
+  useEffect(() => {
+    //get user from localstorage
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    user && setUserId(user);
+  }, []);
 
   const flatDetails = Details?.flat() || [];
   const router = useRouter();
@@ -84,6 +92,7 @@ export default function DetailsCart({
       .unwrap()
       .then(() => {
         toast.success("Xóa sản phẩm thành công");
+        dispatch(ViewCartThunk(userId));
       })
       .catch(() => {
         setHiddenItems((prev) => {

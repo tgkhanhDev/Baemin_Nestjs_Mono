@@ -82,6 +82,7 @@ export default function Home() {
         message.success("Xóa giỏ hàng thành công!");
         setItemList([]);
         setOpen(false);
+        dispatch(ViewCartThunk(userId))
       })
       .catch(() => {
         message.error("Xóa giỏ hàng thất bại! Vui lòng thử lại sau");
