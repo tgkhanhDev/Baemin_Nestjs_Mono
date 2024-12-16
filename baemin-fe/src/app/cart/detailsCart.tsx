@@ -46,6 +46,7 @@ export default function DetailsCart({
 
   const flatDetails = Details?.flat() || [];
   const router = useRouter();
+  const [foodImage, setFoodImage] = useState(true);
 
   useEffect(() => {
     const totalPrice = itemList.reduce(
@@ -200,6 +201,11 @@ export default function DetailsCart({
                           className="relative h-36 w-36 cursor-pointer"
                           onClick={() => handleNavigate(items.food.shop_id)}
                         >
+                          {foodImage && (
+                            <div className="relative h-36 w-36 flex justify-center items-center">
+                              <Skeleton.Image active className="" />
+                            </div>
+                          )}
                           <Image
                             fill
                             style={{ objectFit: "cover" }}
@@ -207,6 +213,7 @@ export default function DetailsCart({
                               items?.food?.food_thumbnail || "/images/all.png"
                             } // Nếu không có ảnh, dùng ảnh mặc định
                             alt={items.food.food_name}
+                            onLoad={() => setFoodImage(false)}
                           />
                         </div>
                         <div

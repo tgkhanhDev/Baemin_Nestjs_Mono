@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { Transaction } from "@/src/types/transaction";
 import { Skeleton } from "antd";
 import { useRouter } from "next/navigation";
@@ -22,6 +22,7 @@ export default function DetailsOrder({
 
   const flatDetails = items?.flat() || [];
   const router = useRouter();
+  const [loadImage, setLoadImage] = useState(true);
 
   const OrderItemSkeleton = () => {
     return (
@@ -65,11 +66,17 @@ export default function DetailsOrder({
                 {/* Thumbnail & Name */}
                 <div className="flex items-center gap-4">
                   <div className="relative w-24 h-24 rounded-md overflow-hidden">
+                    {loadImage && (
+                      <div className="w-full h-full">
+                        <Skeleton.Node active />
+                      </div>
+                    )}
                     <Image
                       fill
                       style={{ objectFit: "cover" }}
                       src={item?.food_thumbnail || "/images/all.png"}
                       alt={item.food_name}
+                      onLoad={() => setLoadImage(false)}
                     />
                   </div>
                   <div>

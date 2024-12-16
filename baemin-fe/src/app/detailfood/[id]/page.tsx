@@ -24,6 +24,8 @@ export default function Home() {
   const params = useParams();
   const id = typeof params?.id === "string" ? params.id : params?.id[0];
   const [quantity, setQuantity] = useState(1);
+  const [imageLoad, setImageLoad] = useState(true);
+  const [shopImage, setShopImage] = useState(true);
 
   const dispatch = useAppDispatch();
   const { shopDetail, loading } = useShop();
@@ -100,7 +102,7 @@ export default function Home() {
     };
     console.log(payload);
     await dispatch(addCartItemThunk(payload));
-    dispatch(ViewCartThunk(userId))
+    dispatch(ViewCartThunk(userId));
   };
 
   const ShopDetailSkeleton = () => {
@@ -173,11 +175,15 @@ export default function Home() {
         <div className="bg-white w-full h-80 flex">
           <div className="w-[45%] h-full py-4 px-10">
             <div className="w-full relative h-full">
+              {shopImage && (
+                <Skeleton.Node active style={{ width: 650, height: 250 }} />
+              )}
               <Image
                 fill
                 style={{ objectFit: "cover" }}
-                src={shopDetail?.shop_thumbnail || "/food/ga1.jpg"}
+                src={shopDetail?.shop_thumbnail || ""}
                 alt={shopDetail?.shop_name || "..."}
+                onLoad={() => setShopImage(false)}
               />
             </div>
           </div>
@@ -349,6 +355,12 @@ export default function Home() {
                       <div className="flex flex-row">
                         <div className="w-[15%] relative h-16">
                           {/* Hiển thị ảnh nếu có, thay thế nếu không có */}
+                          {imageLoad && (
+                            <Skeleton.Node
+                              active
+                              style={{ width: 120, height: 70 }}
+                            />
+                          )}
                           <Image
                             fill
                             style={{ objectFit: "cover" }}
@@ -356,6 +368,7 @@ export default function Home() {
                               food?.food_thumbnail || "/images/placeholder.png"
                             }
                             alt={food.food_name}
+                            onLoad={() => setImageLoad(false)}
                           />
                         </div>
                         <div className="w-[60%] flex flex-col gap-1 px-2">

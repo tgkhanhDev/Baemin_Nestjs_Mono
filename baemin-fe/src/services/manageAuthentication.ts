@@ -1,7 +1,5 @@
 import { apiInstance } from "../constant/apiInstance";
 import { LoginRequest, LoginResponse, RegisterRequest, UserInfo, UpdateInfo } from "../types/auth";
-import { Food } from "../types/food";
-import { utilsResponse } from "../types/utils";
 
 const api = apiInstance("http://localhost:8080/auth-api");
 
